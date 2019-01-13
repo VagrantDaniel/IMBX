@@ -1,0 +1,41 @@
+@import '../../common/css/iconfont.scss';
+@import '../../common/css/normalize.scss';
+@import '../../common/css/variable.scss';
+.inputBox{
+  width: 100%;
+  background: #fff;
+  .singleBox{
+    width: 94%;
+    margin: .27rem 3%;
+    height: 1.07rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border-bottom: 1px solid #555;
+    &:first-child{
+      margin-top: 0;
+    }
+    .icon{
+      color: #555;
+    }
+    .input_field{
+      width: 90% !important;
+      height: 90%;
+      .ant-input{
+        color: #555;
+        border: none;
+        border-radius: none;
+        outline:none;
+        @include font-dpr(16px);
+      }
+    }
+    .ant-input-affix-wrapper .ant-input:focus {
+        border: none;
+        border-bottom: 1px solid white !important;
+        box-shadow: none;
+    }
+    .anticon{
+      @include font-dpr(19px);
+    }
+  }
+}

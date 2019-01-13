@@ -1,0 +1,25 @@
+@import '../../common/css/iconfont.scss';
+@import '../../common/css/normalize.scss';
+@import '../../common/css/variable.scss';
+.header{
+  position: relative;
+  width: 100%;
+  height: 1.33rem;
+  background: $headerBc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .icon{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    color: #fff;
+    padding: 10px;
+  }
+  .header-name{
+    text-align: center;
+    @include font-dpr(18px);
+    color: #fff;
+  }
+}

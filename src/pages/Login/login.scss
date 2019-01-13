@@ -1,0 +1,30 @@
+@import '../../common/css/normalize.scss';
+.login{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-80%);
+  width: 100%;
+  height: 50%;
+  .login_avator{
+    position: relative;
+    width: 30%;
+    height: 30%;
+    margin-bottom: .67rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .login_onEmail,.login_onPhone{
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: auto;
+    margin-bottom: .27rem;
+    border-radius: 60px;
+    width: 80%;
+    height: 1.07rem;
+    border:2px solid #E21A1A;
+    @include font-dpr(18px);
+    color: #E21A1A;
+    cursor: pointer;
+  }
+}

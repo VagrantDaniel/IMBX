@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import Login from './pages/Login/login';
 import Home from './pages/Home/home';
-import './App.less';
+import loginDetails from './pages/LoginDetails/loginDetails';
+import './App.scss';
 
 class App extends Component {
   render() {
@@ -10,8 +11,9 @@ class App extends Component {
       <Router>
         <div className="App">
           <Route exact path="/" component={Login} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/home" component={Home} />
+          <Route path="/login" component={Login} />
+          <Route path="/loginDetails" component={loginDetails} />
+          <Route path="/home" component={Home} />
         </div>
       </Router>
     );

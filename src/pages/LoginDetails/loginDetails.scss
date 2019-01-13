@@ -1,0 +1,21 @@
+@import '../../common/css/normalize.scss';
+@import '../../common/css/variable.scss';
+.loginDetails{
+  .mainContent{
+    .loginOnAccount{
+      position: relative;
+      width: 80%;
+      margin-left: 10%;
+      height: 1.07rem;
+      line-height: 1.07rem;
+      border-radius: .67rem;
+      color: #fff;
+      text-align: center;
+      background: $headerBc;
+      @include font-dpr(16px);
+      &:disabled{
+        color: rgba(255,255,255,0.3);
+      }
+    }
+  }
+}
