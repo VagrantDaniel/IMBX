@@ -12,7 +12,7 @@ class Header extends Component {
     }
   }
   componentDidMount(){
-    if(this.props.loginType == 0){
+    if(this.props.loginType === 0){
       this.setState({
         headerName: '手机号登录',
       })

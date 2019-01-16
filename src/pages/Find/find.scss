@@ -1,0 +1,62 @@
+@import '../../common/css/normalize.scss';
+@import '../../common/css/variable.scss';
+.find{
+  height: 100%;
+  .findTabs{
+    height: 1.07rem;
+    line-height: 1.07rem;
+    .ant-tabs-nav{
+      width: 60%;
+      left: 50%;
+      transform: translateX(-50%);
+      .ant-tabs-tab{
+        height: 1.07rem;
+        width: 50%;
+        @include font-dpr(18px);
+        text-align: center;
+        margin: 0
+      }
+      .ant-tabs-ink-bar{
+        width: 1rem !important;
+        left: 17%;
+        // transform: translateX(-23%) !important;
+      }
+    }
+    .mainList{
+      height: 2.13rem;
+      border-bottom:1px solid #555;
+      li{
+        position: relative;
+        float: left;
+        width: 25%;
+        height: 100%;
+        .icoWrapper{
+          margin: auto;
+          width: 70%;
+          height: 1.6rem;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .ico{
+            display: block;
+            width: 1.07rem;
+            height: 1.07rem;
+            background: $headerBc;
+            border-radius: 50%;
+            color: #fff;
+            text-align: center;
+            line-height: 1.07rem;
+          }
+        }
+        .tag_name{
+          width: 100%;
+          height: .53rem;
+          line-height: .4rem;
+          text-align: center;
+          color: #333;
+          @include font-dpr(14px);
+        }
+      }
+    }
+  }
+}

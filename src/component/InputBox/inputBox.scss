@@ -4,6 +4,10 @@
 .inputBox{
   width: 100%;
   background: #fff;
+  .ant-form-explain{
+    @include font-dpr(16px);
+    padding-left: .27rem;
+  }
   .singleBox{
     width: 94%;
     margin: .27rem 3%;

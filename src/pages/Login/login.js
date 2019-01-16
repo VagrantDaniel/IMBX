@@ -26,7 +26,11 @@ class Login extends Component{
         }}>
           <Button className="login_onPhone" onClick={this.login_onPhone}>手机号登录</Button>
         </Link>
+        <Link to={{pathname: '/loginDetails',
+          search: '?loginType=1',
+        }}>
         <Button className="login_onEmail" onClick={this.login_onEmail}>邮箱登录</Button>
+        </Link>
       </div>
     )
   }
