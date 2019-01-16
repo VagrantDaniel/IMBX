@@ -1,5 +1,5 @@
 import * as types from './actionTypes';
-import {　login, getUserDetail, getUserSubcount, getRecommendResource, getLoginStatus } from '../api';
+import {　login, getUserDetail, getUserSubcount, getLoginStatus, getRecommendResource, getRecommendSongs } from '../api';
 
 const defaultState = {
   account: {
@@ -22,68 +22,122 @@ const defaultState = {
   headerName: null,
   // 音乐列表
   musicList: null,
-
+  // 推荐音乐歌单列表
+  RecommendResourceList: null,
+  // 推荐音乐歌曲列表
+  recommendSongsList: null,
 }
-export default (state = defaultState, action) => {
-  // 判断账号类型：邮箱 or 手机号
-  if(action.type === types.Login_Type){
-    const newState = deepClone(state);
-    console.log('action',action)
-    if(action.value !== null){
-      newState.account.loginType = action.value;
-    }
-    return newState;
-  }
-  // 登录账号
-  if(action.type === types.Remember_Account){
-    const newState = deepClone(state);
-    if(action.value !== null){
-      newState.account.userName = action.value.userName;
-      newState.account.password = action.value.password;
-      login(newState.account.loginType, newState.account.userName, newState.account.password).then(
-        ({data}) => {
-          getLoginStatus().then(({data}) => {
-            if(data.code === 200)
-              getUserSubcount().then(({data}) => {
-                console.log('data', data);
-              }).catch((e) => {
-                console.log('获取用户歌单等信息失败', e);
-              });
-            }else{
-              console.log('data',data.code);
-            }
+export const reducer = (state = defaultState, action) => {
+  let newState;
+  switch(action.type){
+    // 判断账号类型：邮箱 or 手机号
+    case types.Login_Type:
+      newState = deepClone(state);
+      console.log('action',action)
+      if(action.value !== null){
+        newState.account.loginType = action.value;
+      }
+      return newState;
+    // 登录账号
+    case types.Remember_Account:
+      newState = deepClone(state);
+      if(action.value !== null){
+        newState.account.userName = action.value.userName;
+        newState.account.password = action.value.password;
+        login(newState.account.loginType, newState.account.userName, newState.account.password).then(
+          ({data}) => {
+            getLoginStatus().then(({data}) => {
+              if(data.code === 200){
+                getUserSubcount().then(({data}) => {
+                  console.log('data', data);
+                }).catch((e) => {
+                  console.log('获取用户歌单等信息失败', e);
+                });
+              }else{
+                console.log('data',data.code);
+              }
+            }).catch((e) => {
+              console.log('获取登陆状态失败', e)
+            })
+            // getUserSubcount().then(({data}) => {
+            //   console.log('data', data);
+            // }).catch((e) => {
+            //   console.log('获取用户歌单等信息失败', e);
+            // });
+            // getUserDetail(data.account.id).then(({data}) => {
+            //   // new
+            //   console.log('details', data)
+            // }).catch((e) => {
+            //   console.log('获取用户详细信息失败', e);
+            // });
           }).catch((e) => {
-            console.log('获取登陆状态失败', e)
-          })
-          // getUserSubcount().then(({data}) => {
-          //   console.log('data', data);
-          // }).catch((e) => {
-          //   console.log('获取用户歌单等信息失败', e);
-          // });
-          // getUserDetail(data.account.id).then(({data}) => {
-          //   // new
-          //   console.log('details', data)
-          // }).catch((e) => {
-          //   console.log('获取用户详细信息失败', e);
-          // });
-        }).catch((e) => {
-        console.log('登录失败了', e)
-      });
+          console.log('登录失败了', e)
+        });
 
-    }
-    return newState;
+      }
+      return newState;
+    case types.Remember_Account:
+      newState = deepClone(state);
+      if(action.value !== null){
+        newState.account.userName = action.value.userName;
+        newState.account.password = action.value.password;
+        login(newState.account.loginType, newState.account.userName, newState.account.password).then(
+          ({data}) => {
+            getLoginStatus().then(({data}) => {
+              if(data.code === 200){
+                getUserSubcount().then(({data}) => {
+                  console.log('data', data);
+                }).catch((e) => {
+                  console.log('获取用户歌单等信息失败', e);
+                });
+              }else{
+                console.log('data',data.code);
+              }
+            }).catch((e) => {
+              console.log('获取登陆状态失败', e)
+            })
+            // getUserSubcount().then(({data}) => {
+            //   console.log('data', data);
+            // }).catch((e) => {
+            //   console.log('获取用户歌单等信息失败', e);
+            // });
+            // getUserDetail(data.account.id).then(({data}) => {
+            //   // new
+            //   console.log('details', data)
+            // }).catch((e) => {
+            //   console.log('获取用户详细信息失败', e);
+            // });
+          }).catch((e) => {
+          console.log('登录失败了', e)
+        });
+
+      }
+      return newState;
+    case types.Recommend_Resource:
+      newState = deepClone(state);
+      getRecommendSongs().then(({ data }) => {
+        newState.headerName = '每日推荐';
+        console.log(data.recommend)
+        newState.recommendSongsList = data.recommend;
+      }).catch((e) => {
+        console.log('获得每日推荐歌曲失败', e)
+      })
+      return {...state, ...{headerName: '每日推荐'}};
+    default:
+      return state;
   }
-  // 获得每日推荐歌单
-  if(action.type === types.Recommend_Resource){
-    const newState = deepClone(state);
-    getRecommendResource().then(({ data }) => {
-      console.log('data',data)
-      newState.headerName = '每日推荐';
-    }).catch((e) => {
-      console.log('获得每日推荐歌单失败', e)
-    })
-    return newState;
-  }
+
+  // if(action.type === types.Login_Type){
+  //
+  // }
+  //
+  // if(action.type === types.Remember_Account){
+  //
+  // }
+  // // 获得每日推荐歌单
+  // if(action.type === types.Recommend_Resource){
+  //
+  // }
 }
 
 

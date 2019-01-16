@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { HOST } from '../common/js/config.js';
-const instance = axios.create({
-  baseURL: HOST,
-});
+
 //登录
 export function login (type, userName, password) {
   let url = '';
@@ -28,24 +26,36 @@ export function getUserDetail (id) {
 
 //获取用户歌单，收藏，mv、dj数量
 export function getUserSubcount () {
-  let url = JSON.stringify(HOST + 'user/subcount');
-  return instance({
-    method: 'get',
-    url: 'user/subcount',
-    xhrFields: {
-      withCredentials: true
-    },
-  });
+  let url = HOST + `login/status`;
+  return axios.get(url)
+  // let url = JSON.stringify(HOST + 'user/subcount');
+  // return instance({
+  //   method: 'get',
+  //   url: 'user/subcount',
+  //   xhrFields: {
+  //     withCredentials: true
+  //   },
+  // });
 }
 
 // 获得每日推荐歌单
 export function getRecommendResource () {
-  let url = HOST + 'recommend/resource';
-  return axios({
-    method: 'get',
-    url: url,
-    xhrFields: {
-      withCredentials: true
-    },
-  });
+  axios.defaults.baseURL = HOST;
+  let url = `recommend/resource`;
+  return axios.get(url)
+  // let url = HOST + 'recommend/resource';
+  // return axios({
+  //   method: 'get',
+  //   url: url,
+  //   xhrFields: {
+  //     withCredentials: true
+  //   },
+  // });
+}
+
+// 获得每日推荐歌曲
+export function getRecommendSongs () {
+  axios.defaults.baseURL = HOST;
+  let url = `/recommend/songs`;
+  return axios.get(url)
 }

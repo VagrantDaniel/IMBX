@@ -8,9 +8,23 @@ import './mrtj.scss';
 class Mrtj extends Component {
   constructor(props) {
     super(props);
+    console.log('props', props)
+    this.state = {
+      headerName: null,
+      recommendSongsList: null,
+    }
   }
   componentDidMount () {
-
+    if(this.props.headerName != null){
+      this.setState({
+        headerName : this.props.headerName,
+      })
+    }
+    if(this.props.recommendSongsList != null){
+      this.setState({
+        recommendSongsList: this.props.recommendSongsList,
+      })
+    }
   }
   render() {
     return(
@@ -19,14 +33,14 @@ class Mrtj extends Component {
           <Link to="/search">
             <i className="iconfont icon">&#xe611;</i>
           </Link>
-          <div className="header-name">{this.props.headerName}</div>
+          <div className="header-name">{this.state.headerName}</div>
         </div>
         <ul className="musicList">
           {
-            this.props.musicList ?
-            this.props.musicList.map((item, key) => {
+            this.props.recommendSongsList ?
+            this.props.recommendSongsList.map((item, key) => {
               return(
-                <singleMusic info="item" />
+                <singleMusic info={item} key={item.id}/>
               )
             }) : null
           }
@@ -36,8 +50,10 @@ class Mrtj extends Component {
   }
 }
 const mapStateToProps = (state) => {
+  console.log(state)
   return {
     headerName: state.headerName,
+    recommendSongsList: state.recommendSongsList,
   }
 }
 const mapDispatchToProps = (dispatch) => {

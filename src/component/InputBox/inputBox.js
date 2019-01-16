@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { rememberAccount } from '../../store/actionCreator';
 import { Form, Input, Button } from 'antd';
 import './inputBox.scss';
@@ -63,7 +64,9 @@ class InputBox extends Component{
           }
           </Form.Item>
           <Form.Item>
-          <Button className="loginOnAccount" onClick={this.loginOnAccount} htmlType="submit">登录</Button>
+          <Link to='/find'>
+            <Button className="loginOnAccount" onClick={this.loginOnAccount} htmlType="submit">登录</Button>
+          </Link>
           </Form.Item>
         </Form>
       </div>
