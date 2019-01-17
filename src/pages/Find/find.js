@@ -36,7 +36,7 @@ class Find extends Component{
                   exact
                   to='/mrtj'
                   onClick={this.props.handleSrFM}>
-                <li onClick={this.props.getRecommendResource}>
+                <li onClick={this.props.getRecommendResource('每日推荐')}>
                   <div className="icoWrapper">
                     <i className="iconfont ico">&#xe60c;</i>
                   </div>
@@ -77,8 +77,8 @@ class Find extends Component{
 
 const mapDispatchToProps = (dispatch) => {
   return{
-    getRecommendResource(){
-      dispatch(getRecommendResource());
+    getRecommendResource(value){
+      dispatch(getRecommendResource(value));
     }
   }
 }

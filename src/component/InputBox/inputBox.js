@@ -75,7 +75,7 @@ class InputBox extends Component{
 }
 const mapStateToProps = (state) => {
   return {
-    loginType: state.account.loginType,
+    loginType: state.reducer.account.loginType,
   }
 }
 const mapDispatchToProps = (dispatch) => {

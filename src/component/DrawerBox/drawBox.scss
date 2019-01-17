@@ -1,0 +1,41 @@
+@import '../../common/css/normalize.scss';
+@import '../../common/css/variable.scss';
+.drawBox{
+
+}
+.feature_list{
+  width: 100%;
+  height: 60%;
+  overflow-y: scroll;
+  li{
+    width: 100%;
+    height: 1.33rem;
+    line-height: 1.33rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #666;
+    i{
+      margin-left: .2rem;
+      margin-right: .2rem;
+      margin-top: -.09rem;
+    }
+    @include font-dpr(18px);
+  }
+}
+.ant-drawer-top .ant-drawer-content-wrapper, .ant-drawer-bottom .ant-drawer-content-wrapper{
+  height: 60% !important;
+  .ant-drawer-header{
+    height: 1.33rem;
+    padding-bottom: 0;
+    .ant-drawer-title{
+      height: 100%;
+      line-height: 100%;
+      @include font-dpr(16px);
+      border-bottom: 1px solid #666;
+    }
+  }
+  .ant-drawer-body{
+    padding-top: 0;
+  }
+}

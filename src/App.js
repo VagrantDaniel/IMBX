@@ -4,6 +4,7 @@ import Login from './pages/Login/login';
 import Home from './pages/Home/home';
 import Find from './pages/Find/find';
 import Mrtj from './pages/Mrtj/mrtj';
+import singleMusic from './component/SingleMusic/singleMusic';
 import loginDetails from './pages/LoginDetails/loginDetails';
 import './App.scss';
 
@@ -18,6 +19,7 @@ class App extends Component {
           <Route path="/home" component={Home} />
           <Route path="/find" component={Find} />
           <Route path="/mrtj" component={Mrtj} />
+          <Route path="/singleMusic" component={singleMusic} />
         </div>
       </Router>
     );

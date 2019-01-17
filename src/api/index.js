@@ -56,6 +56,6 @@ export function getRecommendResource () {
 // 获得每日推荐歌曲
 export function getRecommendSongs () {
   axios.defaults.baseURL = HOST;
-  let url = `/recommend/songs`;
+  let url = `recommend/songs`;
   return axios.get(url)
 }

@@ -4,13 +4,15 @@
 .mrtj{
   height: 100%;
   .header{
-    position: relative;
+    position: fixed;
+    top: 0;
     width: 100%;
     height: 1.33rem;
     background: $headerBc;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 999;
     .icon{
       position: absolute;
       top: 50%;
@@ -24,5 +26,9 @@
       @include font-dpr(18px);
       color: #fff;
     }
+  }
+  .musicList{
+    margin-top: 1.33rem;
+    overflow: hidden;
   }
 }

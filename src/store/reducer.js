@@ -113,31 +113,20 @@ export const reducer = (state = defaultState, action) => {
 
       }
       return newState;
+    // 获得每日推荐歌单
     case types.Recommend_Resource:
       newState = deepClone(state);
       getRecommendSongs().then(({ data }) => {
-        newState.headerName = '每日推荐';
-        console.log(data.recommend)
+        newState.headerName = action.value;
+        console.log('123', data.recommend)
         newState.recommendSongsList = data.recommend;
       }).catch((e) => {
         console.log('获得每日推荐歌曲失败', e)
       })
-      return {...state, ...{headerName: '每日推荐'}};
+      return newState;
     default:
       return state;
   }
-
-  // if(action.type === types.Login_Type){
-  //
-  // }
-  //
-  // if(action.type === types.Remember_Account){
-  //
-  // }
-  // // 获得每日推荐歌单
-  // if(action.type === types.Recommend_Resource){
-  //
-  // }
 }
 
 
