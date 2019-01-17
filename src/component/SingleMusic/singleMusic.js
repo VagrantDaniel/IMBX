@@ -272,7 +272,7 @@ export default class SingleMusic extends Component {
   }
   render() {
     return(
-        <div className="singleMusic">
+        <li className="singleMusic" data-key={this.props.dataKey}>
           <img src={this.props.info.album.picUrl ? this.props.info.album.picUrl : null} alt="" />
           <div className="singleMusic_trumpet iconfont">&#xe60c;</div>
           <div className="singleMusic_info">
@@ -285,7 +285,7 @@ export default class SingleMusic extends Component {
           </div>
           <div className="singleMusic_video iconfont">&#xe60c;</div>
           <div className="singleMusic_more iconfont" onClick={this.props.readMore}>&#xe60c;</div>
-        </div>
+        </li>
     )
   }
 }

@@ -13,11 +13,20 @@ class Mrtj extends Component {
   }
   componentDidMount () {
   }
-  moreDetails () {
-    this.refs.drawBox.showDrawer();
+  // function getClickIndex () {
+
+  // }
+  moreDetails (e) {
+    var index = e.target.parentNode.getAttribute('data-key');
+    console.log('index', index)
+    // getClickIndex();
+    // 歌曲名、歌手、所属专辑、评论
+    this.refs.drawBox.showDrawer(this.props.recommendSongsList[index].name,
+    this.props.recommendSongsList[index].artists[0].name,
+    this.props.recommendSongsList[index].album.name
+  );
   }
   render() {
-    console.log('props', this.props)
     return(
       <div className="mrtj">
         <div className="header">
@@ -31,7 +40,7 @@ class Mrtj extends Component {
             this.props.recommendSongsList ?
             this.props.recommendSongsList.map((item, key) => {
               return(
-                <SingleMusic info={item} key={item.id} readMore={this.moreDetails}/>
+                <SingleMusic info={item} key={item.id} dataKey={key}　readMore={this.moreDetails}/>
               )
             }) : null
           }

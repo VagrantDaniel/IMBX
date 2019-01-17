@@ -118,7 +118,6 @@ export const reducer = (state = defaultState, action) => {
       newState = deepClone(state);
       getRecommendSongs().then(({ data }) => {
         newState.headerName = action.value;
-        console.log('123', data.recommend)
         newState.recommendSongsList = data.recommend;
       }).catch((e) => {
         console.log('获得每日推荐歌曲失败', e)

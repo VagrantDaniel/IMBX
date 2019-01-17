@@ -10,11 +10,17 @@ class DrawerBox extends Component {
     this.onClose = this.onClose.bind(this);
     this.state = {
       visible: false,
+      songsName: '',
+      singerName: '',
+      alnum: '',
     }
   }
-  showDrawer = () => {
+  showDrawer = (d1,d2,d3) => {
     this.setState({
       visible: true,
+      songsName: d1,
+      singerName: d2,
+      alnum: d3
     });
   };
 
@@ -27,7 +33,7 @@ class DrawerBox extends Component {
     return(
       <div className="drawBox">
         <Drawer
-          title="Basic Drawer"
+          title={this.state.songsName ? '歌曲：'+this.state.songsName : null}
           placement="bottom"
           closable={false}
           onClose={this.onClose}
@@ -39,8 +45,8 @@ class DrawerBox extends Component {
             <li><i className="iconfont">&#xe60c;</i>下载</li>
             <li><i className="iconfont">&#xe60c;</i>评论</li>
             <li><i className="iconfont">&#xe60c;</i>分享</li>
-            <li><i className="iconfont">&#xe60c;</i>歌手：</li>
-            <li><i className="iconfont">&#xe60c;</i>专辑：</li>
+            <li><i className="iconfont">&#xe60c;</i>歌手：{this.state.singerName}</li>
+            <li><i className="iconfont">&#xe60c;</i>专辑：{this.state.album}</li>
             <li><i className="iconfont">&#xe60c;</i>查看视频</li>
             <li><i className="iconfont">&#xe60c;</i>不感兴趣</li>
           </ul>
