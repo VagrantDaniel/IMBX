@@ -59,3 +59,10 @@ export function getRecommendSongs () {
   let url = `recommend/songs`;
   return axios.get(url)
 }
+
+//获取音乐 rtUrl
+export function getSongUrl (id) {
+  axios.defaults.baseURL = HOST;
+  let url = `/song/url?id=${id}`;
+  return axios.get(url);
+}

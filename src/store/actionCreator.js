@@ -17,3 +17,28 @@ export const getRecommendResource = (value) => ({
   type: types.Recommend_Resource,
   value
 })
+
+// 记住当前播放音乐index
+// 更新当前播放音乐Index
+export const getRecommendSongIndex = (value) => ({
+  type: types.Current_Music,
+  value
+})
+
+// 获取音乐url
+export const getSongUrl = (value) => ({
+  type: types.Song_Url,
+  value
+})
+
+//获取音乐audio
+export const getAudio = (value) => ({
+  type: types.Song_Audio,
+  value
+})
+
+//更新每日推荐歌曲列表
+export const updateRecommendSongList = (value) => ({
+  type: types.Update_Recomend,
+  value
+})

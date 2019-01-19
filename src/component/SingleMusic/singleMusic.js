@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 import './singleMusic.scss';
 
-export default class SingleMusic extends Component {
+class SingleMusic extends Component {
   constructor(props) {
     super(props);
   }
@@ -272,9 +274,14 @@ export default class SingleMusic extends Component {
   }
   render() {
     return(
-        <li className="singleMusic" data-key={this.props.dataKey}>
+      <NavLink
+        exact
+        to='/player'
+        >
+        <li className="singleMusic" data-key={this.props.dataKey} onClick={ this.props.getSongIndex }>
           <img src={this.props.info.album.picUrl ? this.props.info.album.picUrl : null} alt="" />
-          <div className="singleMusic_trumpet iconfont">&#xe60c;</div>
+          <div className="singleMusic_trumpet iconfont" style={{'display':
+          this.props.info.id === this.props.recommendSongsList[this.props.recommendSongIndex] ? 'block' :　'none'}}>&#xe60c;</div>
           <div className="singleMusic_info">
             <div className="music_name">{this.props.info.name ? this.props.info.name : null}
               <span className="music_alias">{this.props.info.alias[0] ? '('+this.props.info.alias[0] + ')': null}</span>
@@ -286,6 +293,19 @@ export default class SingleMusic extends Component {
           <div className="singleMusic_video iconfont">&#xe60c;</div>
           <div className="singleMusic_more iconfont" onClick={this.props.readMore}>&#xe60c;</div>
         </li>
+      </NavLink>
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    recommendSongsList: state.reducer.recommendSongsList,
+    recommendSongIndex: state.reducer.recommendSongIndex,
+  }
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(SingleMusic);
