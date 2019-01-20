@@ -14,7 +14,8 @@ export function login (type, userName, password) {
 
 // 获取登陆状态
 export function getLoginStatus () {
-  const url = HOST + 'login/status';
+    axios.defaults.baseURL = HOST;
+  const url = 'login/status';
   return axios.get(url);
 }
 

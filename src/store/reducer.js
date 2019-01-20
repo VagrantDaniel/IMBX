@@ -55,38 +55,11 @@ export const reducer = (state = defaultState, action) => {
     // 登录账号
     case types.Remember_Account:
       newState = deepClone(state);
+          console.log('denglu');
       if(action.value !== null){
         newState.account.userName = action.value.userName;
         newState.account.password = action.value.password;
-        login(newState.account.loginType, newState.account.userName, newState.account.password).then(
-          ({data}) => {
-            getLoginStatus().then(({data}) => {
-              if(data.code === 200){
-                getUserSubcount().then(({data}) => {
-                  console.log('data', data);
-                }).catch((e) => {
-                  console.log('获取用户歌单等信息失败', e);
-                });
-              }else{
-                console.log('data',data.code);
-              }
-            }).catch((e) => {
-              console.log('获取登陆状态失败', e)
-            })
-            // getUserSubcount().then(({data}) => {
-            //   console.log('data', data);
-            // }).catch((e) => {
-            //   console.log('获取用户歌单等信息失败', e);
-            // });
-            // getUserDetail(data.account.id).then(({data}) => {
-            //   // new
-            //   console.log('details', data)
-            // }).catch((e) => {
-            //   console.log('获取用户详细信息失败', e);
-            // });
-          }).catch((e) => {
-          console.log('登录失败了', e)
-        });
+        
 
       }
       return newState;

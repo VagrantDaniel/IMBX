@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { rememberAccount } from '../../store/actionCreator';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Spin } from 'antd';
+import {　login, getLoginStatus } from '../../api';
 import './inputBox.scss';
 
 class InputBox extends Component{
@@ -10,7 +11,9 @@ class InputBox extends Component{
     super(props);
     this.state = {
       loginType : null,
+      loading: false,
     }
+    this.loginSubmit = this.loginSubmit.bind(this);
   }
   componentDidMount(){
     if(this.props.loginType === 0){
@@ -23,13 +26,53 @@ class InputBox extends Component{
       })
     }
   }
+//  加载中
+  toggle = (value) => {
+    this.setState({ loading: value });
+  }
   loginSubmit = (e) => {
     e.preventDefault();
+      console.log('正在登陆');
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        // console.log('Received values of form: ', values);
-        this.props.rememberAccount(values);
+         console.log('Received values of form: ', values);
+//        this.props.rememberAccount(values);
+        login(values.loginType, values.userName, values.password).then(
+            ({data}) => {
+                
+            getLoginStatus().then(({data}) => {
+//              console.log('data',data)
+              if(data.code === 200){
+                    this.props.history.push('/find');
+                                  }
+//                  newState.isLogin = true;
+////                  getUserSubcount().then(({data}) => {
+////                     console.log('data', data);
+////                     }).catch((e) => {
+////                      console.log('获取用户歌单等信息失败', e);
+////                     });
+//              }else{
+//              console.log('data',data.code);
+//              }
+//              }).catch((e) => {
+//               console.log('获取登陆状态失败', e)
+//              })
+            // getUserSubcount().then(({data}) => {
+            //   console.log('data', data);
+            // }).catch((e) => {
+            //   console.log('获取用户歌单等信息失败', e);
+            // });
+            // getUserDetail(data.account.id).then(({data}) => {
+            //   // new
+            //   console.log('details', data)
+             }).catch((e) => {
+               console.log('获取用户详细信息失败', e);
+             });
+        }).catch((e) => {
+            console.log('登录失败了', e)
+        });
       }else{
+         console.log('输入用户名或密码有误！')
         // this.props.rememberAccount();
       }
     });
@@ -64,11 +107,11 @@ class InputBox extends Component{
           }
           </Form.Item>
           <Form.Item>
-          <Link to='/find'>
-            <Button className="loginOnAccount" onClick={this.loginOnAccount} htmlType="submit">登录</Button>
-          </Link>
+           <Button className="loginOnAccount" onClick = {this.toggle} htmlType="submit">登录</Button>
           </Form.Item>
         </Form>
+           <Spin tip="加载中" size="large" spinning={this.state.loading}>
+        </Spin>
       </div>
     )
   }
@@ -86,7 +129,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 InputBox = Form.create()(InputBox);
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(InputBox);
+)(InputBox));
