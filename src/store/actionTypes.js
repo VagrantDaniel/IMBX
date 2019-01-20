@@ -5,3 +5,4 @@ export const Update_Recomend = 'Update_Recomend';
 export const Current_Music = 'Current_Music';
 export const Song_Url = 'Song_Url';
 export const Song_Audio = 'Song_Audio';
+export const Update_PlayNext = 'Update_PlayNext';

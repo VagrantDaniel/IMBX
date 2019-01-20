@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
+import { message } from 'antd';
 import { getSongUrl } from '../../api';
-import { getRecommendSongIndex, getAudio, updateRecommendSongList } from '../../store/actionCreator';
+import { getRecommendSongIndex, getAudio, updateRecommendSongList, updatePlayNext } from '../../store/actionCreator';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import { If } from 'react-if';
 import './musicPlayer.scss';
 
 let rotateTimer = 0;
@@ -68,6 +70,10 @@ class MusicPlayer extends Component {
     //销毁音乐
     this.stopM = this.stopM.bind(this);
     this.playProgress = this.playProgress.bind(this);
+    // 播放类型
+    this.renderPlayType = this.renderPlayType.bind(this);
+    this.playType = this.playType.bind(this);
+    this.randomPlay = this.randomPlay.bind(this);
   }
   componentDidMount(){
     let audio = this.refs.audio;
@@ -83,13 +89,21 @@ class MusicPlayer extends Component {
           })
         }).then(() => {
           this.props.getAudio(this.refs.audio, this.refs.played, this.refs.buffered);
+        }).then(() => {
+          this.play();
         });
       })
     }else{
       this.setState({
         currentMusic: this.props.recommendSongsList[0],
       },() => {
-        this.props.getSongUrl(this.state.currentMusic.id);
+        this.props.getSongUrl(this.state.currentMusic.id).then(() => {
+          this.setState({
+            songUrl: this.props.songUrl,
+          })
+        }).then(() => {
+          this.play();
+        });;
       })
     }
 
@@ -106,14 +120,63 @@ class MusicPlayer extends Component {
     })
     // 设置初始音量
     audio.volume = 0.5;
-    this.play();
+
     // this.refs.volume.style.width = '50%';
+  }
+  renderPlayType(){
+    // 单曲循环
+    if(parseInt(this.props.playType) === 0){
+      return (<a href="javascript:;" className="iconfont btnType" onClick={this.playType(0)}>&#xe619;</a>);
+    }
+    // 列表循环
+    if(parseInt(this.props.playType) === 1){
+      return (<a href="javascript:;" className="iconfont btnType" onClick={this.playType(1)}>&#xe619;</a>);
+    }
+    /*随机循环*/
+    if(parseInt(this.props.playType) === 2){
+      return (<a href="javascript:;" className="iconfont btnType" onClick={this.playType(2)}>&#xe600;</a>);
+    }
   }
   // 销毁音乐
   stopM () {
     let audio = this.refs.audio;
     // audio.
     // audio.removeEventListener('timeupdate',this.playProgress);
+  }
+  // 播放类型
+  playType(type){
+    switch (type) {
+      case 0:
+        message.info('单曲循环');
+        this.props.updatePlayNext(type);
+      break;
+      case 1:
+        message.info('列表循环');
+        this.props.updatePlayNext(type);
+        break;
+      case 2:
+        message.info('随机播放');
+        this.props.updatePlayNext(type);
+        break;
+      default:
+        break;
+    }
+  }
+  // 随机播放
+  randomPlay(index){
+      this.setState({
+        currentMusic: this.props.recommendSongsList[index]
+      },() => {
+        getSongUrl(this.state.currentMusic.id).then((res) => {
+          let url = res.data.data[0].url;
+          this.setState({
+            songUrl: url,
+          })
+          this.props.updateRecommendSongIndex(index);
+        }).then(() => {
+          this.play();
+        });
+      })
   }
   /*播放上一首*/
   playLast(){
@@ -203,7 +266,25 @@ class MusicPlayer extends Component {
       remainTime: this.formatTime(remainTime),
       currentTime: this.formatTime(currentTime),
     });
-    if(audio.ended){
+    if(audio.ended && this.props.playType === 1){
+      switch (this.props.playType) {
+        case 0:
+          this.play();
+          break;
+        case 1:
+          this.playNext();
+
+        case 2:
+          let len = this.props.recommendSongsList.length - 1;
+          let random = parseInt(Math.random() * len);
+          if(random === this.props.recommendSongIndex && this.props.recommendSongIndex != len){
+            random += 1;
+          }
+          this.randomPlay();
+          this.updatePlayNext(2);
+        default:
+          this.playNext();
+      }
       this.playNext();
     }
   }
@@ -333,8 +414,6 @@ class MusicPlayer extends Component {
             this.props.updateRecommendSongIndex(parseInt(index)+1);
             this.props.recommendSongsList.splice(index,1);
             updateRecommendSongList(this.props.recommendSongsList);
-          }).then(() => {
-            this.play();
           });
         })
       }else{
@@ -365,7 +444,12 @@ class MusicPlayer extends Component {
             songUrl: url,
           })
           this.props.updateRecommendSongIndex(this.props.recommendSongIndex - 1);
+          let audio = this.refs.audio;
+          audio.play();
         }).then(() => {
+          this.play();
+        }).then(() => {
+          // 要执行两遍
           this.play();
         });
       })
@@ -388,6 +472,23 @@ class MusicPlayer extends Component {
     }
   }
   render(){
+    const Ftype = (type) => {
+      console.log('type', type, typeof typennnnnnnn)
+      switch (type) {
+        case 0:
+          return (<a href="javascript:;" className="iconfont btnType" onClick={this.playType(0)}>&#xe619;</a>);
+          break;
+        case 1:
+          return (<a href="javascript:;" className="iconfont btnType" onClick={this.playType(1)}>&#xe619;</a>);
+          break;
+        case 2:
+          return (<a href="javascript:;" className="iconfont btnType" onClick={this.playType(2)}>&#xe600;</a>);
+          break;
+        default:
+          return (<a href="javascript:;" className="iconfont btnType" onClick={this.playType(0)}>&#xe619;</a>);
+          break;
+      }
+    };
     return(
       <div className="reactMusicPlayer" id="reactMusicPlayer">
         <div className="header">
@@ -436,8 +537,6 @@ class MusicPlayer extends Component {
           </div>
           {/*控制按钮*/}
           <div className="control">
-            {/*播放模式*/}
-            <a href="javascript:;" className="iconfont btnType" onClick={this.playLast}>&#xe619;</a>
             {/*上一首*/}
             <a href="javascript:;" className="iconfont btnPrev" onClick={this.playLast}>&#xe619;</a>
             {/*播放*/}
@@ -499,12 +598,14 @@ class MusicPlayer extends Component {
 }
 
 const mapStateToProps = (state) => {
+  console.log('state', state);
   return{
     recommendSongsList: state.reducer.recommendSongsList,
     recommendSongIndex: state.reducer.recommendSongIndex,
     audio: state.reducer.audio,
     played: state.reducer.played,
     buffered: state.reducer.buffered,
+    playType: state.reducer.playType,
   }
 }
 const mapDispatchToProps = (dispatch) => {
@@ -517,6 +618,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     updateRecommendSongList(value){
       dispatch(updateRecommendSongList(value));
+    },
+    updatePlayNext(value){
+      dispatch(updatePlayNext(value));
     }
   }
 }

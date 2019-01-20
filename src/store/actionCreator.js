@@ -42,3 +42,9 @@ export const updateRecommendSongList = (value) => ({
   type: types.Update_Recomend,
   value
 })
+
+//更新播放模式
+export const updatePlayNext = (value) => ({
+  type: types.Update_PlayNext,
+  value
+})

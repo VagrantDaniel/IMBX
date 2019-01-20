@@ -1,6 +1,6 @@
 import * as types from './actionTypes';
 import {　login, getUserDetail, getUserSubcount, getLoginStatus, getRecommendResource, getRecommendSongs,
-getSongUrl, updateRecommendSongList } from '../api';
+getSongUrl, updateRecommendSongList, updatePlayNext } from '../api';
 
 const defaultState = {
   account: {
@@ -31,6 +31,9 @@ const defaultState = {
   recommendSongIndex: null,
   // 音乐url
   songUrl: null,
+  // 播放模式
+  // 0 单曲循环,1 列表循环,2 随机播放
+  playType: 0,
   // 音乐audio
   audio: null,
   played: null,
@@ -132,6 +135,15 @@ export const reducer = (state = defaultState, action) => {
         newState.buffered = action.value.buffered;
       }else{
         console.log('获取音乐audio失败');
+      }
+      return newState;
+    // 更新播放模式
+    case types.Update_PlayNext:
+      newState = deepClone(state);
+      if(action.value != null){
+        newState.playType = action.value;
+      }else{
+        console.log('更新播放模式失败');
       }
       return newState;
     default:
