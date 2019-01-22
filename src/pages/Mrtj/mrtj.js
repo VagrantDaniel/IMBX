@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { getRecommendSongIndex } from '../../store/actionCreator';
+import { Link, withRouter } from 'react-router-dom';
+import { getChangeCurrentMusic } from '../../store/actionCreator';
 import SingleMusic from '../../component/SingleMusic/singleMusic';
 import DrawerBox from '../../component/DrawerBox/drawBox';
 // import { getRecommendResource } from '../../store/actionCreator';
@@ -12,13 +12,14 @@ class Mrtj extends Component {
   constructor(props) {
     super(props);
     this.moreDetails = this.moreDetails.bind(this);
-    this.getSongIndex = this.getSongIndex.bind(this);
+    this.changeCurrentMusic = this.changeCurrentMusic.bind(this);
   }
   componentDidMount () {
   }
-  getSongIndex (e){
+  changeCurrentMusic (e){
     let index = e.currentTarget.getAttribute('data-key');
-    this.props.getRecommendSongIndex(index);
+    this.props.getChangeCurrentMusic(this.props.musicList[index]);
+    // this.props.history.push('/playDetails');
   }
   moreDetails (e) {
     e.preventDefault();
@@ -26,8 +27,8 @@ class Mrtj extends Component {
     var index = e.target.parentNode.getAttribute('data-key');
     // 歌曲名、歌手、所属专辑、评论
     this.refs.drawBox.showDrawer(this.props.recommendSongsList[index].name,
-    this.props.recommendSongsList[index].artists[0].name,
-    this.props.recommendSongsList[index].album.name
+    this.props.musicList[index].artists[0].name,
+    this.props.musicList[index].album.name
   );
   }
   render() {
@@ -41,10 +42,10 @@ class Mrtj extends Component {
         </div>
         <ul className="musicList">
           {
-            this.props.recommendSongsList ?
-            this.props.recommendSongsList.map((item, key) => {
+            this.props.musicList ?
+            this.props.musicList.map((item, key) => {
               return(
-                <SingleMusic info={item} key={item.id} dataKey={key}　getSongIndex={ this.getSongIndex } readMore={this.moreDetails}/>
+                <SingleMusic info={item} key={item.id} dataKey={key} changeCurrentMusic={ this.changeCurrentMusic } readMore={this.moreDetails}/>
               )
             }) : null
           }
@@ -57,15 +58,17 @@ class Mrtj extends Component {
 const mapStateToProps = (state) => {
   return {
     headerName: state.reducer.headerName,
-    recommendSongsList: state.reducer.recommendSongsList,
-    recommendSongIndex: state.reducer.recommendSongIndex,
+    musicList: state.reducer.musicList,
+    currentIndex: state.reducer.currentIndex,
+    // recommendSongsList: state.reducer.recommendSongsList,
+    // recommendSongIndex: state.reducer.recommendSongIndex,
   }
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-    getRecommendSongIndex(value){
-      dispatch(getRecommendSongIndex(value));
+    getChangeCurrentMusic(value){
+      dispatch(getChangeCurrentMusic(value));
     }
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(Mrtj);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Mrtj));

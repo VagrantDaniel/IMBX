@@ -1,0 +1,64 @@
+@import '../../common/css/normalize.scss';
+@import '../../common/css/variable.scss';
+
+#reactMusicPlayer,
+.reactMusicPlayer{
+  height: 100%;
+  .progress_wrapper{
+    height: 5%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    .m_currentTime{
+      width: 15%;
+      margin-left: .13rem;
+      @include font-dpr(12px);
+      color: #fff;
+      text-align: center;
+    }
+    .progress{
+      position: relative;
+      width: 100%;
+      height: .07rem;
+      margin-left: .13rem;
+      margin-right: .13rem;
+      border-radius: .27rem;
+      background: #fff;
+      .progress_buffered{
+        position: absolute;
+        height: 100%;
+        top: 0;
+        left: 0;
+        border-radius: .27rem;
+        background: rgba(255,255,255,.7);
+      }
+      .progress_played{
+        position: absolute;
+        height: 100%;
+        top: 0;
+        left: 0;
+        border-radius: .27rem;
+        background: $progressBc;
+      }
+    }
+    .m_totalTime{
+      width: 15%;
+      margin-right: .13rem;
+      @include font-dpr(12px);
+      color: #fff;
+      text-align: center;
+    }
+  }
+  .control{
+    height: 10%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: #fff;
+    .btnType{
+      &.hide{
+        display: none;
+      }
+    }
+  }
+}

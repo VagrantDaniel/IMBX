@@ -1,9 +1,6 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+
 import { message } from 'antd';
-import { getSongUrl } from '../../api';
-import { getRecommendSongIndex, getAudio, updateRecommendSongList, updatePlayNext } from '../../store/actionCreator';
+import { getRecommendSongIndex, getAudio, updateRecommendSongList, updatePlayNext, updateCurrentMusicLyric } from '../../store/actionCreator';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { If } from 'react-if';
 import './musicPlayer.scss';
@@ -13,52 +10,8 @@ class MusicPlayer extends Component {
   constructor(props) {
     super(props);
     console.log('props', this.props )
-    this.state = {
-      // 音乐url
-      songUrl: null,
-      /*时间*/
-      totalTime: 0,
-      currentTime: 0,
-      remainTime: 0,
-      /*百分比*/
-      playPer: 0,
-      bufferPer: 0,
-      /*头像旋转角度*/
-      angle: 0,
-      /*当前播放音乐信息*/
-      currentMusic: {},
-      /*是否播放*/
-      isPlayed: false,
-      // 进度条距左侧宽度
-      playedLeft: 0,
-      //音量控件距左侧宽度
-      volumeLeft: 0,
-      // 是否禁音
-      quitVolume: false,
-      /*播放列表是否显示*/
-      musicListShow: false,
-      /*判断鼠标是否落下*/
-      mouseDown: false,
-      // 音量
-      // 是否打开音乐播放列表
-      isMusicListShow: false,
-    };
-    // 上一首
-    this.playLast = this.playLast.bind(this);
-    // 播放
-    this.play = this.play.bind(this);
-    // 下一首
-    this.playNext = this.playNext.bind(this);
-    // 进度条控制鼠标按下事件
-    this.mouseDown = this.mouseDown.bind(this);
-    // 进度条控制鼠标放开事件
-    this.mouseUp = this.mouseUp.bind(this);
-    // 点击进度条事件
-    this.clickChangeTime = this.clickChangeTime.bind(this);
-    // 拖动进度条事件
-    this.progressChangeTime = this.progressChangeTime.bind(this);
-    // 进度条控制鼠标离开事件
-    this.mouseLeave = this.mouseLeave.bind(this);
+
+
     // 打开音乐播放列表
     this.showMusicList = this.showMusicList.bind(this);
     // 关闭音乐播放列表
@@ -75,53 +28,9 @@ class MusicPlayer extends Component {
     this.playType = this.playType.bind(this);
     this.randomPlay = this.randomPlay.bind(this);
   }
+
   componentDidMount(){
-    let audio = this.refs.audio;
-
-    if(this.props.recommendSongIndex !== null){
-      this.setState({
-        currentMusic: this.props.recommendSongsList[this.props.recommendSongIndex],
-      },() => {
-        getSongUrl(this.state.currentMusic.id).then((res) => {
-          let url = res.data.data[0].url;
-          this.setState({
-            songUrl: url,
-          })
-        }).then(() => {
-          this.props.getAudio(this.refs.audio, this.refs.played, this.refs.buffered);
-        }).then(() => {
-          this.play();
-        });
-      })
-    }else{
-      this.setState({
-        currentMusic: this.props.recommendSongsList[0],
-      },() => {
-        this.props.getSongUrl(this.state.currentMusic.id).then(() => {
-          this.setState({
-            songUrl: this.props.songUrl,
-          })
-        }).then(() => {
-          this.play();
-        });;
-      })
-    }
-
-    audio.addEventListener('canplay', () => {
-      // 获取总时间
-      let totalTime = parseInt(this.refs.audio.duration);
-      this.setState({
-        totalTime: this.formatTime(totalTime),
-        remainTime: this.formatTime(totalTime),
-        currentTime: this.formatTime(0),
-        playedLeft: this.refs.played.getBoundingClientRect().left,
-        // volumeLeft: this.refs.volume.getBoundingClientRect().left,
-      })
-    })
-    // 设置初始音量
-    audio.volume = 0.5;
-
-    // this.refs.volume.style.width = '50%';
+    
   }
   renderPlayType(){
     // 单曲循环
@@ -186,36 +95,50 @@ class MusicPlayer extends Component {
     if(!this.state.songUrl){
       return;
     }
+    let _this = this;
     if(this.props.recommendSongIndex > 0){
       this.setState({
         currentMusic: this.props.recommendSongsList[this.props.recommendSongIndex - 1]
       },() => {
-        getSongUrl(this.state.currentMusic.id).then((res) => {
-          let url = res.data.data[0].url;
-          this.setState({
-            songUrl: url,
-          })
-          this.props.updateRecommendSongIndex(this.props.recommendSongIndex - 1);
+        axios.all([getSongUrl(this.state.currentMusic.id),getSongLyric(this.state.currentMusic.id)])
+        .then(axios.spread(function (acct, perms) {
+            let url = acct.data.data[0].url;
+            _this.setState({
+              songUrl: url,
+            });
+            _this.props.updateRecommendSongIndex(_this.props.recommendSongIndex - 1);
+            let lyric = perms.data.lrc.lyric;
+            _this.props.updateCurrentMusicLyric(lyric);
+
+        })).then(() => {
+          _this.props.getAudio(this.refs.audio, this.refs.played, this.refs.buffered);
         }).then(() => {
-          this.play();
+          _this.play();
         });
       })
     }else{
       this.setState({
         currentMusic: this.props.recommendSongsList[this.props.recommendSongsList.length - 1]
       },() => {
-        getSongUrl(this.state.currentMusic.id).then((res) => {
-          let url = res.data.data[0].url;
-          this.setState({
-            songUrl: url,
-          })
-          this.props.updateRecommonSongIndex(this.props.recommendSongsList.length - 1);
+        axios.all([getSongUrl(this.state.currentMusic.id),getSongLyric(this.state.currentMusic.id)])
+        .then(axios.spread(function (acct, perms) {
+            let url = acct.data.data[0].url;
+            _this.setState({
+              songUrl: url,
+            });
+            _this.props.updateRecommendSongIndex(_this.props.recommendSongIndex - 1);
+            let lyric = perms.data.lrc.lyric;
+            _this.props.updateCurrentMusicLyric(lyric);
+
+        })).then(() => {
+          _this.props.getAudio(this.refs.audio, this.refs.played, this.refs.buffered);
         }).then(() => {
-          this.play();
+          _this.play();
         });
       })
     }
   }
+
   /*播放当前选中音乐*/
   play(){
     let audio = this.refs.audio;
@@ -241,32 +164,32 @@ class MusicPlayer extends Component {
       })
     }
 
-    audio.addEventListener('timeupdate',this.playProgress)
+    // audio.addEventListener('timeupdate',this.playProgress)
   }
-  playProgress(){
+  playProgress(e){
     // 设置播放进度条
     // let audio = this.props.audio;
-    let audio = this.refs.audio;
-    // console.log('audio', audio)
-    let playPer = audio.currentTime / audio.duration;
+    // let audio = this.refs.audio;
+    const { currentTime, duration, buffered } = e.target;
+    let playPer = currentTime / duration;
     this.refs.played.style.width = playPer*100 + '%';
     // 设置缓冲进度条
     let bufferedTime = 0;
-    let bufferedRanges = audio.buffered;
+    let bufferedRanges = buffered;
     if(bufferedRanges.length){
       // audio.buffered.end(0)
       bufferedTime = bufferedRanges.end(bufferedRanges.length - 1);
     }
-    let bufferPer = bufferedTime / audio.duration;
+    let bufferPer = bufferedTime / duration;
     this.refs.buffered.style.width = bufferPer*100 + '%';
     // 设置剩余时间
-    let remainTime = parseInt(audio.duration - audio.currentTime);
-    let currentTime = parseInt(audio.currentTime);
+    let remainTime = parseInt(duration - currentTime);
+    let current_time = parseInt(currentTime);
     this.setState({
       remainTime: this.formatTime(remainTime),
-      currentTime: this.formatTime(currentTime),
+      currentTime: this.formatTime(current_time),
     });
-    if(audio.ended && this.props.playType === 1){
+    if(e.target.ended){
       switch (this.props.playType) {
         case 0:
           this.play();
@@ -285,7 +208,6 @@ class MusicPlayer extends Component {
         default:
           this.playNext();
       }
-      this.playNext();
     }
   }
   /*播放下一首*/
@@ -296,32 +218,45 @@ class MusicPlayer extends Component {
     if(!this.state.songUrl){
       return;
     }
+    let _this = this;
     if(this.props.recommendSongIndex < this.props.recommendSongsList.length - 1){
       this.setState({
         currentMusic: this.props.recommendSongsList[this.props.recommendSongIndex + 1]
       },() => {
-        getSongUrl(this.state.currentMusic.id).then((res) => {
-          let url = res.data.data[0].url;
-          this.setState({
-            songUrl: url,
-          })
-          this.props.updateRecommonSongIndex(this.props.recommendSongIndex + 1);
+        axios.all([getSongUrl(this.state.currentMusic.id),getSongLyric(this.state.currentMusic.id)])
+        .then(axios.spread(function (acct, perms) {
+            let url = acct.data.data[0].url;
+            _this.setState({
+              songUrl: url,
+            });
+            _this.props.updateRecommendSongIndex(_this.props.recommendSongIndex - 1);
+            let lyric = perms.data.lrc.lyric;
+            _this.props.updateCurrentMusicLyric(lyric);
+
+        })).then(() => {
+          _this.props.getAudio(this.refs.audio, this.refs.played, this.refs.buffered);
         }).then(() => {
-          this.play();
+          _this.play();
         });
       });
     }else{
       this.setState({
         currentMusic: this.props.recommendSongsList[0]
       },() => {
-        getSongUrl(this.state.currentMusic.id).then((res) => {
-          let url = res.data.data[0].url;
-          this.setState({
-            songUrl: url,
-          })
-          this.props.updateRecommonSongIndex(0);
+        axios.all([getSongUrl(this.state.currentMusic.id),getSongLyric(this.state.currentMusic.id)])
+        .then(axios.spread(function (acct, perms) {
+            let url = acct.data.data[0].url;
+            _this.setState({
+              songUrl: url,
+            });
+            _this.props.updateRecommendSongIndex(_this.props.recommendSongIndex - 1);
+            let lyric = perms.data.lrc.lyric;
+            _this.props.updateCurrentMusicLyric(lyric);
+
+        })).then(() => {
+          _this.props.getAudio(this.refs.audio, this.refs.played, this.refs.buffered);
         }).then(() => {
-          this.play();
+          _this.play();
         });
       })
     }
@@ -373,17 +308,24 @@ class MusicPlayer extends Component {
   musicDemand(e){
     let index = e.currentTarget.getAttribute('data-key');
     if(this.props.recommendSongIndex !== index){
+      let _this = this;
       this.setState({
         currentMusic: this.props.recommendSongsList[index]
       },() => {
-        getSongUrl(this.state.currentMusic.id).then((res) => {
-          let url = res.data.data[0].url;
-          this.setState({
-            songUrl: url,
-          })
-          this.props.updateRecommendSongIndex(index);
+        axios.all([getSongUrl(this.state.currentMusic.id),getSongLyric(this.state.currentMusic.id)])
+        .then(axios.spread(function (acct, perms) {
+            let url = acct.data.data[0].url;
+            _this.setState({
+              songUrl: url,
+            });
+            _this.props.updateRecommendSongIndex(_this.props.recommendSongIndex - 1);
+            let lyric = perms.data.lrc.lyric;
+            _this.props.updateCurrentMusicLyric(lyric);
+
+        })).then(() => {
+          _this.props.getAudio(this.refs.audio, this.refs.played, this.refs.buffered);
         }).then(() => {
-          this.play();
+          _this.play();
         });
       })
     }else{
@@ -395,44 +337,57 @@ class MusicPlayer extends Component {
     e.stopPropagation();
     let index = e.target.parentNode.getAttribute('data-key');
     // 删除的当前正在播放的音乐
-    console.log(index, this.props.recommendSongsList.length)
-    if(index === 0 && this.props.recommendSongsList.length === 1){
+    let _this = this;
+    if(this.props.recommendSongsList.length === 1){
       let audio = this.refs.audio;
       audio.removeEventListener('timeupdate',this.playProgress);
       this.props.history.push('/mrtj');
     }else if(index === this.props.recommendSongIndex){
-      // 删除的不是最后一个
+      // 删除的是正在播放的音乐并且不是最后一个
       if(index < this.props.recommendSongsList.length - 1){
         this.setState({
           currentMusic: this.props.recommendSongsList[parseInt(index) + 1]
         },() => {
-          getSongUrl(this.state.currentMusic.id).then((res) => {
-            let url = res.data.data[0].url;
-            this.setState({
-              songUrl: url,
-            })
-            this.props.updateRecommendSongIndex(parseInt(index)+1);
-            this.props.recommendSongsList.splice(index,1);
-            updateRecommendSongList(this.props.recommendSongsList);
+          axios.all([getSongUrl(this.state.currentMusic.id),getSongLyric(this.state.currentMusic.id)])
+          .then(axios.spread(function (acct, perms) {
+              let url = acct.data.data[0].url;
+              _this.setState({
+                songUrl: url,
+              });
+              _this.props.updateRecommendSongIndex(_this.props.recommendSongIndex - 1);
+              let lyric = perms.data.lrc.lyric;
+              _this.props.updateCurrentMusicLyric(lyric);
+
+          })).then(() => {
+            _this.props.getAudio(this.refs.audio, this.refs.played, this.refs.buffered);
+          }).then(() => {
+            _this.play();
           });
         })
       }else{
+        // 删除的是正在播放的音乐并且是最后一个
         this.setState({
           currentMusic: this.props.recommendSongsList[0]
         },() => {
-          getSongUrl(this.state.currentMusic.id).then((res) => {
-            let url = res.data.data[0].url;
-            this.setState({
-              songUrl: url,
-            })
-            this.props.updateRecommendSongIndex(0);
+          axios.all([getSongUrl(this.state.currentMusic.id),getSongLyric(this.state.currentMusic.id)])
+          .then(axios.spread(function (acct, perms) {
+              let url = acct.data.data[0].url;
+              _this.setState({
+                songUrl: url,
+              });
+              _this.props.updateRecommendSongIndex(_this.props.recommendSongIndex - 1);
+              let lyric = perms.data.lrc.lyric;
+              _this.props.updateCurrentMusicLyric(lyric);
+
+          })).then(() => {
+            _this.props.getAudio(this.refs.audio, this.refs.played, this.refs.buffered);
           }).then(() => {
-            this.play();
+            _this.play();
           });
         })
       }
     }else if(index < this.props.recommendSongIndex){
-      // 删除的不是正在播放的音乐
+      // 删除的不是正在播放的音乐并且是正在播放音乐靠前的
       this.props.recommendSongsList.splice(index,1);
       updateRecommendSongList(this.props.recommendSongsList);
       this.setState({
@@ -443,7 +398,7 @@ class MusicPlayer extends Component {
           this.setState({
             songUrl: url,
           })
-          this.props.updateRecommendSongIndex(this.props.recommendSongIndex - 1);
+          _this.props.updateRecommendSongIndex(_this.props.recommendSongIndex - 1);
           let audio = this.refs.audio;
           audio.play();
         }).then(() => {
@@ -454,6 +409,7 @@ class MusicPlayer extends Component {
         });
       })
     }else{
+      // 删除的不是正在播放的音乐并且是正在播放音乐后面的
       this.props.recommendSongsList.splice(index,1);
       updateRecommendSongList(this.props.recommendSongsList);
     }
@@ -473,7 +429,7 @@ class MusicPlayer extends Component {
   }
   render(){
     const Ftype = (type) => {
-      console.log('type', type, typeof typennnnnnnn)
+      console.log('type', type, typeof type)
       switch (type) {
         case 0:
           return (<a href="javascript:;" className="iconfont btnType" onClick={this.playType(0)}>&#xe619;</a>);
@@ -491,24 +447,8 @@ class MusicPlayer extends Component {
     };
     return(
       <div className="reactMusicPlayer" id="reactMusicPlayer">
-        <div className="header">
-          <Link to="/mrtj">
-            <i className="iconfont icon" onClick={this.stopM}>&#xe611;</i>
-          </Link>
-          <div className="header_name">
-            <div className="music_name">{this.state.currentMusic.name ?　this.state.currentMusic.name : null}</div>
-            <div className="music_author">{this.state.currentMusic.artists ?
-              this.state.currentMusic.artists.map((item) => {
-                return item.name
-              }) : null
-            }</div>
-          </div>
-        </div>
-        <div className="music_box">
-          {/*歌词展示*/}
-          <div className="music_lyrics">
 
-          </div>
+          {/*歌词展示*/}
           <div className="toolBtnList">
           {/*喜爱*/}
             <a href="javascript:;" className="iconfont fav" onClick={this.playLast}>&#xe619;</a>
@@ -521,37 +461,9 @@ class MusicPlayer extends Component {
             {/*详情*/}
             <a href="javascript:;" className="iconfont pointList" onClick={this.playLast}>&#xe619;</a>
           </div>
-          {/*播放进度条*/}
-          <div className="progress_wrapper" ref="progress"
-             onClick={this.clickChangeTime}
-             onMouseDown={this.mouseDown}
-             onMouseMove={this.progressChangeTime}
-             onMouseUp={this.mouseUp}
-             onMouseLeave={this.mouseLeave}>
-            <div className="m_currentTime">{this.state.currentTime}</div>
-            <div className="progress">
-              <div className="progress_buffered" ref='buffered'></div>
-              <div className="progress_played" ref='played'></div>
-            </div>
-            <div className="m_totalTime">{this.state.totalTime}</div>
-          </div>
-          {/*控制按钮*/}
-          <div className="control">
-            {/*上一首*/}
-            <a href="javascript:;" className="iconfont btnPrev" onClick={this.playLast}>&#xe619;</a>
-            {/*播放*/}
-            {
-              this.state.isPlayed ?
-                <a href="javascript:;" className="iconfont btnPlay" onClick={this.play}>&#xe69d;</a> :
-                <a href="javascript:;" className="iconfont btnPause" onClick={this.play}>&#xe600;</a>
-            }
-            {/*下一首*/}
-            <a href="javascript:;" className="iconfont btnNext" onClick={this.playNext}>&#xe61b;</a>
-            {/*音乐列表*/}
-            <a href="javascript:;" className="iconfont musicList" onClick={this.showMusicList}>&#xe607;</a>
-          </div>
+
         </div>
-        <audio src={this.state.songUrl ? this.state.songUrl : ''} ref="audio"></audio>
+
         <ReactCSSTransitionGroup transitionName="music-list-show"
           component="div"
           transitionEnterTimeout={500}
@@ -621,6 +533,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     updatePlayNext(value){
       dispatch(updatePlayNext(value));
+    },
+    updateCurrentMusicLyric(value){
+      dispatch(updateCurrentMusicLyric(value));
     }
   }
 }

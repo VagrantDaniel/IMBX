@@ -1,0 +1,22 @@
+@import '../../common/css/normalize.scss';
+@import '../../common/css/variable.scss';
+.lyric_container{
+  position: relative;
+  height: 70%;
+  width: 80%;
+  margin: auto;
+  padding-top: 5%;
+  overflow-y: auto;
+  li{
+    height: .8rem;
+    line-height: .8rem;
+    @include font-dpr(16px);
+    text-align: center;
+    &.lyric-list{
+      color: #999;
+    }
+    &.highlight{
+      color: #fff;
+    }
+  }
+}

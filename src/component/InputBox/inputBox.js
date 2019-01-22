@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { rememberAccount } from '../../store/actionCreator';
-import { Form, Input, Button, Spin } from 'antd';
+import { Form, Input, Button, Spin, Icon, message } from 'antd';
 import {　login, getLoginStatus } from '../../api';
 import './inputBox.scss';
 
@@ -26,25 +26,40 @@ class InputBox extends Component{
       })
     }
   }
-//  加载中
-  toggle = (value) => {
-    this.setState({ loading: value });
-  }
+
   loginSubmit = (e) => {
     e.preventDefault();
       console.log('正在登陆');
     this.props.form.validateFields((err, values) => {
       if (!err) {
          console.log('Received values of form: ', values);
+         // 加载中
+         this.setState({ loading: true });
 //        this.props.rememberAccount(values);
         login(values.loginType, values.userName, values.password).then(
             ({data}) => {
-                
-            getLoginStatus().then(({data}) => {
-//              console.log('data',data)
               if(data.code === 200){
-                    this.props.history.push('/find');
-                                  }
+                let userInfo = data;
+                getLoginStatus().then(({data}) => {
+                  if(data.code === 200){
+                      this.props.rememberAccount(data.profile);
+                      this.props.history.push('/find');
+                  }
+                }).catch((e) => {
+                  console.log('获取用户详细信息失败', e);
+                });
+              }else{
+                message.config({
+                  top: '50%',
+                  duration: 3,
+                  maxCount: 3,
+                });
+                message.error(this.state.loginType+'或密码有误');
+                this.setState({ loading: false });
+                this.refs.userName.text = '';
+                this.refs.password.text = '';
+              }
+
 //                  newState.isLogin = true;
 ////                  getUserSubcount().then(({data}) => {
 ////                     console.log('data', data);
@@ -65,9 +80,6 @@ class InputBox extends Component{
             // getUserDetail(data.account.id).then(({data}) => {
             //   // new
             //   console.log('details', data)
-             }).catch((e) => {
-               console.log('获取用户详细信息失败', e);
-             });
         }).catch((e) => {
             console.log('登录失败了', e)
         });
@@ -79,6 +91,7 @@ class InputBox extends Component{
   }
   render(){
     const { getFieldDecorator } = this.props.form;
+    const antIcon = <Icon type="loading" style={{ fontSize: 24, color: '#999' }} spin />;
     return(
       <div className="inputBox">
         <Form onSubmit={this.loginSubmit}>
@@ -89,7 +102,7 @@ class InputBox extends Component{
             })(
               <div className="singleBox">
                 <i className="iconfont icon">&#xe62e;</i>
-                <Input className="input_field" placeholder={this.state.loginType} allowClear></Input>
+                <Input className="input_field" placeholder={this.state.loginType} allowClear ref="userName"></Input>
               </div>
             )
           }
@@ -101,18 +114,17 @@ class InputBox extends Component{
               })(
               <div className="singleBox">
                 <i className="iconfont icon">&#xe640;</i>
-                <Input className="input_field" placeholder="密码" allowClear></Input>
+                <Input className="input_field" placeholder="密码" allowClear ref="password"></Input>
               </div>
              )
           }
           </Form.Item>
           <Form.Item>
-           <Button className="loginOnAccount" onClick = {this.toggle} htmlType="submit">登录</Button>
+           <Button className="loginOnAccount" htmlType="submit" disabled={this.state.loading}>登录</Button>
           </Form.Item>
         </Form>
-           <Spin tip="加载中" size="large" spinning={this.state.loading}>
-        </Spin>
-      </div>
+        <Spin tip="加载中..." size="large"  spinning={this.state.loading}></Spin>
+        </div>
     )
   }
 }

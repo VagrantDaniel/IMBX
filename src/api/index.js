@@ -14,8 +14,9 @@ export function login (type, userName, password) {
 
 // 获取登陆状态
 export function getLoginStatus () {
-    axios.defaults.baseURL = HOST;
-  const url = 'login/status';
+  axios.defaults.baseURL = HOST;
+  let url = 'login/status';
+  console.log(axios);
   return axios.get(url);
 }
 
@@ -61,9 +62,16 @@ export function getRecommendSongs () {
   return axios.get(url)
 }
 
-//获取音乐 rtUrl
-export function getSongUrl (id) {
+//获取音乐 Url
+export function getMusicUrl (id) {
   axios.defaults.baseURL = HOST;
   let url = `/song/url?id=${id}`;
+  return axios.get(url);
+}
+
+// 获取音乐歌词
+export function getMusicLyric (id) {
+  axios.defaults.baseURL = HOST;
+  let url = `/lyric?id=${id}`;
   return axios.get(url);
 }
