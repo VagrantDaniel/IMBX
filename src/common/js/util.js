@@ -28,3 +28,17 @@ export function findIndex (allList, list) {
     return item.id === list.id;
   });
 }
+
+// 规定时间格式
+export function formatTime (time) {
+  if(time){
+    if(time < 60){
+      time = `00:${time < 10 ? `0${time}`: time}`
+    }else{
+      time = `${parseInt(time/60) < 10 ? `0${parseInt(time/60)}`: parseInt(time/60)}:${time%60 < 10 ? `0${time%60}`: parseInt(time%60)}`
+    }
+    return time;
+  }else{
+    return `00:00`
+  }
+}

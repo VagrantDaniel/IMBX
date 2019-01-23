@@ -13,22 +13,41 @@ import './playDetails.scss';
 class PlayDetails extends Component{
   constructor(props) {
     super(props);
+    this.state = {
+      name: '',
+      artists: '',
+      musicUrl: '',
+    }
   }
-  componentWillMount(){
-
+  componentWillReceiveProps(nextProps){
+    if(!nextProps.currentMusic){
+      return;
+    }
+    // 当上一个props 的歌词和 这个 props 的歌词一样时，直接返回
+     const r =
+       JSON.stringify(nextProps.currentMusic) ===
+       JSON.stringify(this.props.currentMusic);
+     if (r) {
+       return;
+     }
+    this.setState(() => ({
+      name: nextProps.currentMusic.name,
+      artists: nextProps.currentMusic.artists,
+      musicUrl: nextProps.currentMusic.musicUrl,
+    }));
   }
   render(){
     return(
       <div className="playDetails">
         {/*导航*/}
         <div className="header">
-          <Link to="/mrtj">
+          <Link to="/playDetails">
             <i className="iconfont icon" onClick={this.stopM}>&#xe611;</i>
           </Link>
           <div className="header_name">
-            <div className="music_name">{this.props.currentMusic.name ?　this.props.currentMusic.name : null}</div>
-            <div className="music_author">{this.props.currentMusic.artists ?
-              this.props.currentMusic.artists.map((item) => {
+            <div className="music_name">{this.state.name ?　this.state.name : null}</div>
+            <div className="music_author">{this.state.artists ?
+              this.state.artists.map((item) => {
                 return item.name
               }) : null
             }</div>
@@ -39,7 +58,7 @@ class PlayDetails extends Component{
           {/*歌词*/}
           {/*功能列表*/}
           {/*播放器*/}
-          <Player ref="player" currentMusicSrc={ this.props.currentMusic.musicUrl }></Player>
+          <Player ref="player" currentMusicSrc={ this.state.musicUrl }></Player>
         </div>
       </div>
     )
@@ -47,7 +66,6 @@ class PlayDetails extends Component{
 }
 
 const mapStateToProps = (state) => {
-  console.log('state', state);
   return{
     currentMusic: state.reducer.currentMusic,
     currentMusicLyric: state.reducer.currentMusicLyric,

@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getChangePlayingStatusAction, playPrevMusicAction, playNextMusicAction, getChangePlayModeAction } from '../../store/actionCreator';
 import { PLAY_MODE_TYPES } from '../../common/js/config';
+import { formatTime } from '../../common/js/util';
 import './player.scss';
 
 const PLAYING_STATUS = {
@@ -73,33 +74,26 @@ class Player extends Component {
   }
   componentWillReceiveProps(nextProps){
     const audio = this.refs.audio;
-    if(!nextProps.currentMusicSrc){
+    if(!nextProps.currentMusic){
       return;
     }
     // 当上一个props 的歌曲和 这个 props 的歌曲一样时，直接返回
      const r =
-       JSON.stringify(nextProps.currentMusicSrc) ===
-       JSON.stringify(this.props.currentMusicSrc);
+       JSON.stringify(nextProps.currentMusic) ===
+       JSON.stringify(this.props.currentMusic);
      if (r) {
        return;
      }
-     // getSongUrl(this.state.currentMusic.id).then(({data}) => {
-     //   if(data.code === 200){
-     //     let url = acct.data.data[0].url;
-     //     this.setState({
-     //       songUrl: url,
-     //     },() => {
-     //       this.play();
-     //     });
-     //   }
-     // })
+     this.setState(() => ({
+       currentMusic: nextProps.currentMusic,
+     }));
      audio.addEventListener('canplay', () => {
          // 获取总时间
          let totalTime = parseInt(audio.duration);
          this.setState({
-           totalTime: this.formatTime(totalTime),
-           remainTime: this.formatTime(totalTime),
-           currentTime: this.formatTime(0),
+           totalTime: formatTime(totalTime),
+           remainTime: formatTime(totalTime),
+           currentTime: formatTime(0),
            playedLeft: this.refs.played.getBoundingClientRect().left,
            // volumeLeft: this.refs.volume.getBoundingClientRect().left,
          })
@@ -321,15 +315,15 @@ class Player extends Component {
           {/*播放*/}
           {
             this.props.playing ?
-              <a href="javascript:;" className="iconfont btnPlay" onClick={this.handleChangePlayingStatus(PLAYING_STATUS.paused)}>&#xe69d;</a> :
-              <a href="javascript:;" className="iconfont btnPause" onClick={this.handleChangePlayingStatus(PLAYING_STATUS.playing)}>&#xe600;</a>
+              <a href="javascript:;" className="iconfont btnPlay" >&#xe69d;</a> :
+              <a href="javascript:;" className="iconfont btnPause" >&#xe600;</a>
           }
           {/*下一首*/}
           <a href="javascript:;" className="iconfont btnNext" onClick={this.props.playNextMusic}>&#xe61b;</a>
           {/*音乐列表*/}
           <a href="javascript:;" className="iconfont musicList">&#xe607;</a>
         </div>
-        <audio autoPlay src={this.props.currentMusic ? this.props.currentMusic.musicUrl : ''}
+        <audio autoPlay src={this.state.currentMusic ? this.state.currentMusic.musicUrl : ''}
             ref="audio"
             onTimeUpdate={this.playProgress}></audio>
       </div>
@@ -338,27 +332,27 @@ class Player extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log('state1', state)
   return{
     playing: state.reducer.playing,
     playList: state.reducer.playList,
-    playMode: state.reducer.playMode,
+    // playMode: state.reducer.playMode,
     currentMusic: state.reducer.currentMusic,
+    currentMusicSrc: state.reducer.currentMusicSrc,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    changePlayingStatus (status) {
-      dispatch(getChangePlayingStatusAction(status));
+    changePlayingStatus (value) {
+      dispatch(getChangePlayingStatusAction(value));
     },
     changePlayMode (value) {
       dispatch(getChangePlayModeAction(value));
     },
-    playPrevMusic (value) {
+    playPrevMusic () {
       dispatch(playPrevMusicAction());
     },
-    playNextMusic (value) {
+    playNextMusic () {
       dispatch(playNextMusicAction());
     },
   }

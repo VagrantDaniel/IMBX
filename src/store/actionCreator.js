@@ -4,6 +4,7 @@ import { findIndex } from '../common/js/util';
 import { PLAY_MODE_TYPES } from '../common/js/config';
 import { message } from 'antd';
 import { push } from 'react-router-redux';
+import history from 'history/createBrowserHistory';
 
 // 判断账号类型：邮箱 or 手机号
 export const getLoginType = (value) => ({
@@ -87,9 +88,9 @@ export const getChangePlayListAction = (value) => ({
 });
 
 //		改变当前播放索引 currentIndex
-export const getChangeCurrentIndex = (index) => ({
+export const getChangeCurrentIndex = (value) => ({
 	type: types.CHANGE_CURRENT_INDEX,
-	index
+	value
 });
 
 //		改变当前播放歌曲信息
@@ -144,7 +145,7 @@ function random (index, length){
 export const getChangeCurrentMusic = (value, loadCacheMusic = false) => {
 	return (dispatch, getState) => {
 		const state = getState();
-		const list  = state.reducer.playList;
+		const list  = state.reducer.musicList;
 //				从歌曲列表中寻找当前歌曲的index
 		const index = findIndex(list, value);
 		if ( index === state.reducer.currentIndex && !loadCacheMusic){
@@ -161,9 +162,8 @@ export const getChangeCurrentMusic = (value, loadCacheMusic = false) => {
 			dispatch(getChangeCurrentIndex(list.length - 1));
 		}
 //				改变当前播放音乐信息
-		dispatch(changeCurrentMusicAction(value));
-//				获取当前播放音乐歌词
-		dispatch(getCurrentMusicLyric());
+		// dispatch(changeCurrentMusicAction(value));
+		// console.log('123')
 //				获取歌曲url
 		getMusicUrl(value.id).then(({data: { data }}) => {
 			if(!data[0].url){
@@ -174,16 +174,15 @@ export const getChangeCurrentMusic = (value, loadCacheMusic = false) => {
 				return;
 			}
 			value.musicUrl = data[0].url;
-			dispatch(getChangePlayListAction((value)));
-
+			dispatch(changeCurrentMusicAction(value));
 			if(loadCacheMusic){
 				let STOP = false;
 				dispatch(getChangePlayingStatusAction(STOP));
 			}
 
 		}).then(() => {
-			console.log('huoqu')
-			dispatch(push('/playDetails'));
+			//				获取当前播放音乐歌词
+					dispatch(getCurrentMusicLyric());
 		})
 	}
 }
@@ -192,8 +191,9 @@ export const getChangeCurrentMusic = (value, loadCacheMusic = false) => {
 export const playPrevMusicAction = () => {
 	return (dispatch, getState) => {
 		const state = getState();
-		let { currentIndex, playList } = state.reducer;
-		let len = playList.length;
+		const { musicList } = state.reducer;
+		let { currentIndex } = state.reducer;
+		let len = musicList.length;
 		if(len === 0 || len === 1){
 			return;
 		}
@@ -202,11 +202,11 @@ export const playPrevMusicAction = () => {
 //					返回值不能等于原来的 index
 			currentIndex = random(currentIndex, len);
 		}else if (currentIndex > 0){
-			currentIndex --;
+			currentIndex--;
 		}else{
 			currentIndex = len -1;
 		}
-		dispatch(getChangeCurrentMusic(playList[currentIndex]));
+		dispatch(getChangeCurrentMusic(musicList[currentIndex]));
 		dispatch(getChangeCurrentIndex(currentIndex));
 	}
 }
@@ -215,8 +215,9 @@ export const playPrevMusicAction = () => {
 export const playNextMusicAction = () => {
 	return (dispatch, getState) => {
 		const state = getState();
-		let { currentIndex, playList } = state.reducer;
-		let len = playList.length;
+		const { musicList } = state.reducer;
+		let { currentIndex } = state.reducer;
+		let len = musicList.length;
 		if(len === 0 || len === 1){
 			return;
 		}
@@ -225,11 +226,11 @@ export const playNextMusicAction = () => {
 //					返回值不能等于原来的 index
 			currentIndex = random(currentIndex, len);
 		}else if (currentIndex < len - 1){
-			currentIndex ++;
+			currentIndex++;
 		}else{
 			currentIndex = 0;
 		}
-		dispatch(getChangeCurrentMusic(playList[currentIndex]));
+		dispatch(getChangeCurrentMusic(musicList[currentIndex]));
 		dispatch(getChangeCurrentIndex(currentIndex));
 	}
 }

@@ -19,7 +19,7 @@ class Mrtj extends Component {
   changeCurrentMusic (e){
     let index = e.currentTarget.getAttribute('data-key');
     this.props.getChangeCurrentMusic(this.props.musicList[index]);
-    // this.props.history.push('/playDetails');
+    this.props.history.push('/playDetails');
   }
   moreDetails (e) {
     e.preventDefault();

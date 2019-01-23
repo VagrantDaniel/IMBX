@@ -50,21 +50,7 @@ const defaultState = {
   // 播放状态
   playing: false,
   // 播放音乐
-  currentMusic: {
-    id: 442009238,
-    musicName: '上野公园',
-    musicUrl: '',
-    imgUrl:
-      'http://p2.music.126.net/64JozXeLm7ErtXpwGrwwEw==/109951162811190850.jpg',
-    singers: [{
-      id: 12195169,
-      name: 'Atta Girl'
-    }],
-    album: {
-      id: null,
-      name: 'Everyone Loves You When You Were Still A Kid'
-    }
-  },
+  currentMusic: null,
   // 当前播放索引
   currentIndex: 0,
   // 播放音乐歌词
@@ -172,42 +158,44 @@ export const reducer = (state = defaultState, action) => {
     // 改变音乐播放状态
     case types.CHANGE_PLAYING_STATUS:
       newState = deepClone(state);
-      if(!action.value){
+      if(action.value){
         newState.playing = action.value;
       }
       return newState;
     // 改变音乐播放模式
     case types.CHANGE_PLAY_MODE:
       newState = deepClone(state);
-      if(!action.value){
+      if(action.value){
         newState.playMode = action.value;
       }
       return newState;
     // 改变当前播放音乐歌词
     case types.CHANGE_CURRENT_MUSIC_LYRIC:
       newState = deepClone(state);
-      if(!action.value){
+      if(action.value){
         newState.currentMusicLyric = action.value;
       }
       return newState;
     // 改变当前播放列表
     case types.CHANGE_PLAY_LIST:
       newState = deepClone(state);
-      if(!action.value){
-        newState.playList = action.value;
+      if(action.value){
+        // newState.playList = action.value;
+        newState.musicList = action.value;
       }
       return newState;
     // 改变当前播放音乐信息
     case types.CHANGE_CURRENT_MUSIC:
       newState = deepClone(state);
-      if(!action.value){
-        newState.currentMusic = action.value;
-      }
+      newState.currentMusic = action.value;
+      newState.playing = true;
       return newState;
     // 改变当前播放音乐索引
     case types.CHANGE_CURRENT_INDEX:
       newState = deepClone(state);
-      if(!action.value){
+      console.log('action.value', action.value)
+      if(action.value){
+        console.log('dhwjdlqkl')
         newState.currentIndex = action.value;
       }
       return newState;
