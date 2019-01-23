@@ -41,7 +41,7 @@ class PlayDetails extends Component{
       <div className="playDetails">
         {/*导航*/}
         <div className="header">
-          <Link to="/playDetails">
+          <Link to="/mrtj">
             <i className="iconfont icon" onClick={this.stopM}>&#xe611;</i>
           </Link>
           <div className="header_name">

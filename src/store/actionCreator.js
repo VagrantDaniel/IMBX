@@ -193,7 +193,7 @@ export const playPrevMusicAction = () => {
 		const state = getState();
 		const { musicList } = state.reducer;
 		let { currentIndex } = state.reducer;
-		let len = musicList.length;
+		const len = musicList.length;
 		if(len === 0 || len === 1){
 			return;
 		}
@@ -204,7 +204,7 @@ export const playPrevMusicAction = () => {
 		}else if (currentIndex > 0){
 			currentIndex--;
 		}else{
-			currentIndex = len -1;
+			currentIndex = len - 1;
 		}
 		dispatch(getChangeCurrentMusic(musicList[currentIndex]));
 		dispatch(getChangeCurrentIndex(currentIndex));
@@ -217,7 +217,7 @@ export const playNextMusicAction = () => {
 		const state = getState();
 		const { musicList } = state.reducer;
 		let { currentIndex } = state.reducer;
-		let len = musicList.length;
+		const len = musicList.length;
 		if(len === 0 || len === 1){
 			return;
 		}

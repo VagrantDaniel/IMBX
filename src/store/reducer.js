@@ -193,9 +193,7 @@ export const reducer = (state = defaultState, action) => {
     // 改变当前播放音乐索引
     case types.CHANGE_CURRENT_INDEX:
       newState = deepClone(state);
-      console.log('action.value', action.value)
-      if(action.value){
-        console.log('dhwjdlqkl')
+      if(action.value != null){
         newState.currentIndex = action.value;
       }
       return newState;
