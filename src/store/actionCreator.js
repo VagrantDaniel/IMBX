@@ -70,9 +70,9 @@ value
 // ///////////////////////////////////
 
 // 改变音乐播放状态
-export const getChangePlayingStatusAction = (status) => ({
-type: types.CHANGE_PLAYING_STATUS,
-status
+export const getChangePlayingStatusAction = (value) => ({
+	type: types.CHANGE_PLAYING_STATUS,
+	value
 });
 
 // 改变音乐播放模式
@@ -110,6 +110,7 @@ export const getChangeVolumeAction = (value) => ({
 	type: types.CHANGE_VOLUME,
 	value
 });
+
 
 //		获取当前播放音乐歌词
 function getCurrentMusicLyric(){

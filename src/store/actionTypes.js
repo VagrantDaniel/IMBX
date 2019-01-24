@@ -22,3 +22,5 @@ export const CHANGE_PLAY_LIST = 'CHANGE_PLAY_LIST';
 export const CHANGE_CURRENT_MUSIC = 'CHANGE_CURRENT_MUSIC';
 // 改变音乐音量
 export const CHANGE_VOLUME = 'CHANGE_VOLUME';
+// 滚动条拖动后修改歌词
+export const CHANCE_POS_MUSIC_LYRIC = 'CHANCE_POS_MUSIC_LYRIC';

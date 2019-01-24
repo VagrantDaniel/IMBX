@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { getRecommendSongIndex, updateRecommendSongList, getChangePlayListAction} from '../../store/actionCreator';
 import { Link } from 'react-router-dom';
 import { getMusicUrl, getMusicLyric} from '../../api';
+import MusicLyric from '../../component/MusicLyric/musicLyric';
 import Player from '../../component/Player/player';
 import axios from 'axios';
 import './playDetails.scss';
@@ -17,7 +18,10 @@ class PlayDetails extends Component{
       name: '',
       artists: '',
       musicUrl: '',
+      currentMusicLyric: '',
     }
+    // 滚动条拖动后修改歌词
+    this.changeMusicLyric = this.changeMusicLyric.bind(this);
   }
   componentWillReceiveProps(nextProps){
     if(!nextProps.currentMusic){
@@ -34,7 +38,15 @@ class PlayDetails extends Component{
       name: nextProps.currentMusic.name,
       artists: nextProps.currentMusic.artists,
       musicUrl: nextProps.currentMusic.musicUrl,
+      currentMusicLyric: nextProps.currentMusic.currentMusicLyric,
     }));
+  }
+  // 滚动条拖动后修改歌词
+  changeMusicLyric (currentTime) {
+    this.musicLyric.seek(currentTime);
+  }
+  onRef = (ref) => {
+      this.musicLyric = ref
   }
   render(){
     return(
@@ -56,9 +68,10 @@ class PlayDetails extends Component{
         {/*音乐盒组装*/}
         <div className="music_box">
           {/*歌词*/}
+          <MusicLyric onRef={this.onRef} currentMusicLyric = { this.state.musicLyric }></MusicLyric>
           {/*功能列表*/}
           {/*播放器*/}
-          <Player ref="player" currentMusicSrc={ this.state.musicUrl }></Player>
+          <Player ref="player" currentMusicSrc={ this.state.musicUrl } getChangePosLyric={ this.changeMusicLyric }></Player>
         </div>
       </div>
     )

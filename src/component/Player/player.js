@@ -18,10 +18,6 @@ class Player extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // 音乐列表
-      updateRecommendSongList: null,
-      // 音乐url
-      songUrl: null,
       /*时间*/
       totalTime: 0,
       currentTime: 0,
@@ -49,14 +45,8 @@ class Player extends Component {
       // 是否打开音乐播放列表
       isMusicListShow: false,
     };
-    // 上一首
-    // this.playLast = this.playLast.bind(this);
-    // 播放
-    this.play = this.play.bind(this);
-    // 下一首
-    // this.playNext = this.playNext.bind(this);
     // 更新进度条播放时间
-    // this.playProgress = this.playProgress.bind(this);
+    this.playProgress = this.playProgress.bind(this);
     // 进度条控制鼠标按下事件
     // this.mouseDown = this.mouseDown.bind(this);
     // 进度条控制鼠标放开事件
@@ -64,7 +54,7 @@ class Player extends Component {
     // 点击进度条事件
     // this.clickChangeTime = this.clickChangeTime.bind(this);
     // 拖动进度条事件
-    // this.progressChangeTime = this.progressChangeTime.bind(this);
+    this.progressChangeTime = this.progressChangeTime.bind(this);
     // 进度条控制鼠标离开事件
     // this.mouseLeave = this.mouseLeave.bind(this);
 
@@ -101,66 +91,26 @@ class Player extends Component {
      });
      // 设置初始音量
      audio.volume = 0.5;
+     audio.addEventListener('timeupdate',this.playProgress)
   }
-  /*播放上一首*/
-  // playLast(){
-  //   this.setState({
-  //     angle: 0
-  //   })
-  //   if(!this.props.currentMusicSrc){
-  //     return;
-  //   }
-  //   let _this = this;
-  //   if(this.props.recommendSongIndex > 0){
-  //     this.setState({
-  //       currentMusic: this.props.recommendSongsList[this.props.recommendSongIndex - 1]
-  //     },() => {
-  //       axios.all([getSongUrl(this.state.currentMusic.id),getSongLyric(this.state.currentMusic.id)])
-  //       .then(axios.spread(function (acct, perms) {
-  //           let url = acct.data.data[0].url;
-  //           _this.setState({
-  //             songUrl: url,
-  //           });
-  //           _this.props.updateRecommendSongIndex(_this.props.recommendSongIndex - 1);
-  //           let lyric = perms.data.lrc.lyric;
-  //           _this.props.updateCurrentMusicLyric(lyric);
-  //
-  //       })).then(() => {
-  //         _this.props.getAudio(this.refs.audio, this.refs.played, this.refs.buffered);
-  //       }).then(() => {
-  //         _this.play();
-  //       });
-  //     })
-  //   }else{
-  //     this.setState({
-  //       currentMusic: this.props.recommendSongsList[this.props.recommendSongsList.length - 1]
-  //     },() => {
-  //       axios.all([getSongUrl(this.state.currentMusic.id),getSongLyric(this.state.currentMusic.id)])
-  //       .then(axios.spread(function (acct, perms) {
-  //           let url = acct.data.data[0].url;
-  //           _this.setState({
-  //             songUrl: url,
-  //           });
-  //           _this.props.updateRecommendSongIndex(_this.props.recommendSongIndex - 1);
-  //           let lyric = perms.data.lrc.lyric;
-  //           _this.props.updateCurrentMusicLyric(lyric);
-  //
-  //       })).then(() => {
-  //         _this.props.getAudio(this.refs.audio, this.refs.played, this.refs.buffered);
-  //       }).then(() => {
-  //         _this.play();
-  //       });
-  //     })
-  //   }
-  // }
-  // // 播放当前选中音乐
+  componentWillUnmount(){
+    const audio = this.refs.audio;
+    audio.removeEventListener('timeupdate',this.playProgress)
+  }
+
+  // 拖动进度条事件
+  progressChangeTime(e){
+    const audio = this.refs.audio;
+    let percent = (e.clientX - this.state.playedLeft) / this.refs.progress.offsetWidth;
+    this.refs.played.style.width = percent * 100 + '%';
+    audio.currentTime = percent * audio.duration;
+    this.props.getChangePosLyric(audio.currentTime);
+  }
+  // 播放当前选中音乐
   handleChangePlayingStatus (status) {
     const audio = this.refs.audio;
-    if (this.props.playList.length === 0) {
-      return;
-    }
     this.props.changePlayingStatus(status);
-    if (status === PLAYING_STATUS.playing) {
+    if (status == PLAYING_STATUS.playing) {
       audio.play();
     } else {
       audio.pause();
@@ -170,127 +120,28 @@ class Player extends Component {
       this.refs.musicDetail.togglePlay();
     }
   }
-  /**/
-  play(){
-    // if(audio.paused && this.props.currentMusicSrc){
-    //   audio.play();
-    //   this.setState({
-    //     isPlayed: true
-    //   },() => {
-    //     // rotateTimer = setInterval(() => {
-    //     //   this.setState({
-    //     //     angle: this.state.angle + 1
-    //     //   },() => {
-    //     //     this.refs.musicAvator.style.transform = `rotate(${this.state.angle}deg)`;
-    //     //   })
-    //     // }, 33)
-    //   })
-    // }else{
-    //   audio.pause();
-    //   this.setState({
-    //     isPlayed: false
-    //   }, () => {
-    //     // clearInterval(rotateTimer);
-    //   })
-    // }
-
-    // audio.addEventListener('timeupdate',this.playProgress)
+  playProgress(e){
+    // 设置播放进度条
+    const { currentTime, duration, buffered } = e.target;
+    let playPer = currentTime / duration;
+    this.refs.played.style.width = playPer*100 + '%';
+    // 设置缓冲进度条
+    let bufferedTime = 0;
+    let bufferedRanges = buffered;
+    if(bufferedRanges.length){
+      // audio.buffered.end(0)
+      bufferedTime = bufferedRanges.end(bufferedRanges.length - 1);
+    }
+    let bufferPer = bufferedTime / duration;
+    this.refs.buffered.style.width = bufferPer*100 + '%';
+    // 设置剩余时间
+    let remainTime = parseInt(duration - currentTime);
+    let current_time = parseInt(currentTime);
+    this.setState({
+      remainTime: formatTime(remainTime),
+      currentTime: formatTime(current_time),
+    });
   }
-  // playProgress(e){
-  //   // 设置播放进度条
-  //   // let audio = this.props.audio;
-  //   // let audio = this.refs.audio;
-  //   const { currentTime, duration, buffered } = e.target;
-  //   let playPer = currentTime / duration;
-  //   this.refs.played.style.width = playPer*100 + '%';
-  //   // 设置缓冲进度条
-  //   let bufferedTime = 0;
-  //   let bufferedRanges = buffered;
-  //   if(bufferedRanges.length){
-  //     // audio.buffered.end(0)
-  //     bufferedTime = bufferedRanges.end(bufferedRanges.length - 1);
-  //   }
-  //   let bufferPer = bufferedTime / duration;
-  //   this.refs.buffered.style.width = bufferPer*100 + '%';
-  //   // 设置剩余时间
-  //   let remainTime = parseInt(duration - currentTime);
-  //   let current_time = parseInt(currentTime);
-  //   this.setState({
-  //     remainTime: this.formatTime(remainTime),
-  //     currentTime: this.formatTime(current_time),
-  //   });
-  //   if(e.target.ended){
-  //     switch (this.props.playType) {
-  //       case 0:
-  //         this.play();
-  //         break;
-  //       case 1:
-  //         this.playNext();
-  //
-  //       case 2:
-  //         let len = this.props.recommendSongsList.length - 1;
-  //         let random = parseInt(Math.random() * len);
-  //         if(random === this.props.recommendSongIndex && this.props.recommendSongIndex != len){
-  //           random += 1;
-  //         }
-  //         this.randomPlay();
-  //         this.updatePlayNext(2);
-  //       default:
-  //         this.playNext();
-  //     }
-  //   }
-  // }
-  /*播放下一首*/
-  // playNext(){
-  //   this.setState({
-  //     angle: 0
-  //   });
-  //   if(!this.state.songUrl){
-  //     return;
-  //   }
-  //   let _this = this;
-  //   if(this.props.recommendSongIndex < this.props.recommendSongsList.length - 1){
-  //     this.setState({
-  //       currentMusic: this.props.recommendSongsList[this.props.recommendSongIndex + 1]
-  //     },() => {
-  //       axios.all([getSongUrl(this.state.currentMusic.id),getSongLyric(this.state.currentMusic.id)])
-  //       .then(axios.spread(function (acct, perms) {
-  //           let url = acct.data.data[0].url;
-  //           _this.setState({
-  //             songUrl: url,
-  //           });
-  //           _this.props.updateRecommendSongIndex(_this.props.recommendSongIndex - 1);
-  //           let lyric = perms.data.lrc.lyric;
-  //           _this.props.updateCurrentMusicLyric(lyric);
-  //
-  //       })).then(() => {
-  //         _this.props.getAudio(this.refs.audio, this.refs.played, this.refs.buffered);
-  //       }).then(() => {
-  //         _this.play();
-  //       });
-  //     });
-  //   }else{
-  //     this.setState({
-  //       currentMusic: this.props.recommendSongsList[0]
-  //     },() => {
-  //       axios.all([getSongUrl(this.state.currentMusic.id),getSongLyric(this.state.currentMusic.id)])
-  //       .then(axios.spread(function (acct, perms) {
-  //           let url = acct.data.data[0].url;
-  //           _this.setState({
-  //             songUrl: url,
-  //           });
-  //           _this.props.updateRecommendSongIndex(_this.props.recommendSongIndex - 1);
-  //           let lyric = perms.data.lrc.lyric;
-  //           _this.props.updateCurrentMusicLyric(lyric);
-  //
-  //       })).then(() => {
-  //         _this.props.getAudio(this.refs.audio, this.refs.played, this.refs.buffered);
-  //       }).then(() => {
-  //         _this.play();
-  //       });
-  //     })
-  //   }
-  // }
   render() {
     return(
       <div className="reactMusicPlayer" id="reactMusicPlayer">
@@ -302,7 +153,7 @@ class Player extends Component {
            onMouseUp={this.mouseUp}
            onMouseLeave={this.mouseLeave}>
           <div className="m_currentTime">{this.state.currentTime}</div>
-          <div className="progress">
+          <div className="progress" ref="progress">
             <div className="progress_buffered" ref='buffered'></div>
             <div className="progress_played" ref='played'></div>
           </div>
@@ -315,8 +166,8 @@ class Player extends Component {
           {/*播放*/}
           {
             this.props.playing ?
-              <a href="javascript:;" className="iconfont btnPlay" >&#xe69d;</a> :
-              <a href="javascript:;" className="iconfont btnPause" >&#xe600;</a>
+              <a href="javascript:;" className="iconfont btnPlay" onClick={ () => this.handleChangePlayingStatus(PLAYING_STATUS.paused) }>&#xe69d;</a> :
+              <a href="javascript:;" className="iconfont btnPause" onClick={ () => this.handleChangePlayingStatus(PLAYING_STATUS.playing) }>&#xe600;</a>
           }
           {/*下一首*/}
           <a href="javascript:;" className="iconfont btnNext" onClick={this.props.playNextMusic}>&#xe61b;</a>
@@ -354,7 +205,7 @@ const mapDispatchToProps = (dispatch) => {
     },
     playNextMusic () {
       dispatch(playNextMusicAction());
-    },
+    }
   }
 }
 

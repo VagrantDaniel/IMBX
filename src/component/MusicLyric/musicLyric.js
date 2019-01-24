@@ -15,11 +15,13 @@ class MusicLyric extends Component {
       musicTime: 0,
     }
   }
+  componentDidMount(){
+    this.props.onRef(this);
+  }
   componentWillReceiveProps(nextProps) {
     if(!nextProps.currentMusicLyric){
       return;
     }
-    console.log(nextProps.currentMusicLyric)
     // 当上一个props 的歌词和 这个 props 的歌词一样时，直接返回
      const r =
        JSON.stringify(nextProps.currentMusicLyric) ===
@@ -33,7 +35,7 @@ class MusicLyric extends Component {
        // 如果之前已经有被处理过的歌词的话，先将原来的歌词暂停
        this.state.lyric.stop();
      }
-    let lyric = new Lyric(nextProps.currentMusicLyric,this.handleLyric);
+    let lyric = new Lyric(nextProps.currentMusicLyric.lrc.lyric,this.handleLyric);
     this.setState(() => ({
       lyric: lyric,
       noLyric: false
@@ -44,6 +46,9 @@ class MusicLyric extends Component {
       this.refs.lyricList.scrollTo(0, 0);
     });
   }
+  seek = (startTime) => {
+    this.state.lyric.seek(startTime * 1000);
+  };
   // 歌词向上滚动控制
   handleLyric = ({ lineNum }) => {
     if (this.state.noLyric) {

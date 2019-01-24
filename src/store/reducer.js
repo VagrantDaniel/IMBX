@@ -60,7 +60,7 @@ const defaultState = {
   // 播放模式
   playMode: PLAY_MODE_TYPES.SEQUENCE_PLAY,
   // 音量
-  volume: DEFAULT_VOLUME
+  volume: DEFAULT_VOLUME,
 }
 export const reducer = (state = defaultState, action) => {
   let newState;
@@ -158,9 +158,7 @@ export const reducer = (state = defaultState, action) => {
     // 改变音乐播放状态
     case types.CHANGE_PLAYING_STATUS:
       newState = deepClone(state);
-      if(action.value){
-        newState.playing = action.value;
-      }
+      newState.playing = action.value;
       return newState;
     // 改变音乐播放模式
     case types.CHANGE_PLAY_MODE:
