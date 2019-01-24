@@ -91,11 +91,11 @@ class Player extends Component {
      });
      // 设置初始音量
      audio.volume = 0.5;
-     audio.addEventListener('timeupdate',this.playProgress)
+     audio.addEventListener('timeupdate',this.playProgress);
   }
   componentWillUnmount(){
     const audio = this.refs.audio;
-    audio.removeEventListener('timeupdate',this.playProgress)
+    audio.removeEventListener('timeupdate',this.playProgress);
   }
 
   // 拖动进度条事件
@@ -121,6 +121,7 @@ class Player extends Component {
     }
   }
   playProgress(e){
+    const audio = this.refs.audio;
     // 设置播放进度条
     const { currentTime, duration, buffered } = e.target;
     let playPer = currentTime / duration;
@@ -141,12 +142,15 @@ class Player extends Component {
       remainTime: formatTime(remainTime),
       currentTime: formatTime(current_time),
     });
+    if(audio.ended){
+      this.props.playNextMusic();
+    }
   }
   render() {
     return(
       <div className="reactMusicPlayer" id="reactMusicPlayer">
         {/*播放进度条*/}
-        <div className="progress_wrapper" ref="progress"
+        <div className="progress_wrapper"
            onClick={this.clickChangeTime}
            onMouseDown={this.mouseDown}
            onMouseMove={this.progressChangeTime}
