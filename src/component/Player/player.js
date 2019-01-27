@@ -176,7 +176,7 @@ class Player extends Component {
           {/*下一首*/}
           <a href="javascript:;" className="iconfont btnNext" onClick={this.props.playNextMusic}>&#xe61b;</a>
           {/*音乐列表*/}
-          <a href="javascript:;" className="iconfont musicList">&#xe607;</a>
+          <a href="javascript:;" className="iconfont musicList" onClick={this.props.showMusicList}>&#xe607;</a>
         </div>
         <audio autoPlay src={this.state.currentMusic ? this.state.currentMusic.musicUrl : ''}
             ref="audio"

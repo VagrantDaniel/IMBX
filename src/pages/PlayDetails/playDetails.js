@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { getMusicUrl, getMusicLyric} from '../../api';
 import MusicLyric from '../../component/MusicLyric/musicLyric';
 import Player from '../../component/Player/player';
+import MusicList from '../../component/MusicList/musicList';
 import axios from 'axios';
 import './playDetails.scss';
 
@@ -22,6 +23,8 @@ class PlayDetails extends Component{
     }
     // 滚动条拖动后修改歌词
     this.changeMusicLyric = this.changeMusicLyric.bind(this);
+    // 点击显示歌曲列表
+    this.showMusicList = this.showMusicList.bind(this);
   }
   componentWillReceiveProps(nextProps){
     if(!nextProps.currentMusic){
@@ -45,8 +48,19 @@ class PlayDetails extends Component{
   changeMusicLyric (currentTime) {
     this.musicLyric.seek(currentTime);
   }
+  // 点击显示歌曲列表
+  showMusicList () {
+    // console.log(this.musicList);
+    console.log('ref', this.refs)
+    this.refs.musicList.showMusicList();
+  }
   onRef = (ref) => {
-      this.musicLyric = ref
+    // this.musicLyric = ref;
+    this.musicList = ref;
+
+  }
+  onRef1 = (ref) => {
+    this.musicList = ref;
   }
   render(){
     return(
@@ -71,7 +85,10 @@ class PlayDetails extends Component{
           <MusicLyric onRef={this.onRef} currentMusicLyric = { this.state.musicLyric }></MusicLyric>
           {/*功能列表*/}
           {/*播放器*/}
-          <Player ref="player" currentMusicSrc={ this.state.musicUrl } getChangePosLyric={ this.changeMusicLyric }></Player>
+          <Player ref="player" currentMusicSrc={ this.state.musicUrl } getChangePosLyric={ this.changeMusicLyric }
+          showMusicList={ this.showMusicList }></Player>
+          // 音乐列表
+          <MusicList ref="musicList"></MusicList>
         </div>
       </div>
     )

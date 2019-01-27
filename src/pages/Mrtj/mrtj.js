@@ -26,10 +26,9 @@ class Mrtj extends Component {
     e.stopPropagation();
     var index = e.target.parentNode.getAttribute('data-key');
     // 歌曲名、歌手、所属专辑、评论
-    this.refs.drawBox.showDrawer(this.props.recommendSongsList[index].name,
+    this.refs.drawBox.showDrawer(this.props.musicList[index].name,
     this.props.musicList[index].artists[0].name,
-    this.props.musicList[index].album.name
-  );
+    this.props.musicList[index].album.name);
   }
   render() {
     return(
