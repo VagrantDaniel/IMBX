@@ -50,9 +50,7 @@ class PlayDetails extends Component{
   }
   // 点击显示歌曲列表
   showMusicList () {
-    // console.log(this.musicList);
-    console.log('ref', this.refs)
-    this.refs.musicList.showMusicList();
+    this.musicList.showMusicList();
   }
   onRef = (ref) => {
     // this.musicLyric = ref;
@@ -88,7 +86,7 @@ class PlayDetails extends Component{
           <Player ref="player" currentMusicSrc={ this.state.musicUrl } getChangePosLyric={ this.changeMusicLyric }
           showMusicList={ this.showMusicList }></Player>
           // 音乐列表
-          <MusicList ref="musicList"></MusicList>
+          <MusicList onRef1={this.onRef1}></MusicList>
         </div>
       </div>
     )

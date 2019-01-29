@@ -178,8 +178,7 @@ export const reducer = (state = defaultState, action) => {
     case types.CHANGE_PLAY_LIST:
       newState = deepClone(state);
       if(action.value){
-        // newState.playList = action.value;
-        newState.musicList = action.value;
+        newState.playList = action.value;
       }
       return newState;
     // 改变当前播放音乐信息

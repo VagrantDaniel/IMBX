@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { getChangeCurrentMusic } from '../../store/actionCreator';
+import { getChangeCurrentMusic, getChangePlayListAction } from '../../store/actionCreator';
 import SingleMusic from '../../component/SingleMusic/singleMusic';
 import DrawerBox from '../../component/DrawerBox/drawBox';
 // import { getRecommendResource } from '../../store/actionCreator';
@@ -15,6 +15,7 @@ class Mrtj extends Component {
     this.changeCurrentMusic = this.changeCurrentMusic.bind(this);
   }
   componentDidMount () {
+    this.props.getChangePlayListAction(this.props.musicList);
   }
   changeCurrentMusic (e){
     let index = e.currentTarget.getAttribute('data-key');
@@ -67,6 +68,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getChangeCurrentMusic(value){
       dispatch(getChangeCurrentMusic(value));
+    },
+    getChangePlayListAction(value){
+      dispatch(getChangePlayListAction(value));
     }
   }
 }
