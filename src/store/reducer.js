@@ -21,7 +21,10 @@ const defaultState = {
   //   level: null, // 我的等级
   //
   // },
-
+  recommend: {
+    name: '推荐歌单',
+    songSheetList: null,
+  },
   // 推荐音乐歌单列表
   RecommendResourceList: null,
   // 推荐音乐歌曲列表
@@ -68,7 +71,6 @@ export const reducer = (state = defaultState, action) => {
     // 判断账号类型：邮箱 or 手机号
     case types.Login_Type:
       newState = deepClone(state);
-      console.log('action',action)
       if(action.value !== null){
         newState.account.loginType = action.value;
       }
@@ -83,8 +85,8 @@ export const reducer = (state = defaultState, action) => {
         newState.account.isLogin = true;
       }
       return newState;
-    // 获得每日推荐歌单
-    case types.Recommend_Resource:
+    // 获得每日推荐歌曲
+    case types.Recommend_Songs:
       newState = deepClone(state);
       getRecommendSongs().then(({ data }) => {
         newState.headerName = action.value;
@@ -94,6 +96,16 @@ export const reducer = (state = defaultState, action) => {
         console.log('获得每日推荐歌曲失败', e)
       })
       return newState;
+    // 获得每日推荐歌单
+    case types.Recommend_Resource:
+        newState = deepClone(state);
+        getRecommendResource().then(( {data} ) => {
+          console.log('recommend', data.recommend)
+          newState.recommend.songSheetList = data.recommend;
+        }).catch((e) => {
+          console.log('获得每日推荐歌单失败', e)
+        })
+        return newState;
     // 更新每日推荐歌单
     case types.Update_Recomend:
       newState = deepClone(state);

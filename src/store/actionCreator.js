@@ -18,6 +18,12 @@ type: types.Remember_Account,
 value
 })
 
+// 获得每日推荐歌曲
+export const getRecommendSongs = (value) => ({
+type: types.Recommend_Songs,
+value
+})
+
 // 获得每日推荐歌单
 export const getRecommendResource = (value) => ({
 type: types.Recommend_Resource,

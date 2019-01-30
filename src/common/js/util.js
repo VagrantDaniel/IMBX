@@ -42,3 +42,9 @@ export function formatTime (time) {
     return `00:00`
   }
 }
+
+// 规定播放次数
+export function formatPlayCount (playcount){
+  let count = playcount.toString();
+  return count.substring(0, count.length - 4);
+}

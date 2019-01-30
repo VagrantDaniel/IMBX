@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { rememberAccount } from '../../store/actionCreator';
+import { rememberAccount, getRecommendResource } from '../../store/actionCreator';
 import { Form, Input, Button, Spin, Icon, message } from 'antd';
 import {　login, getLoginStatus } from '../../api';
 import './inputBox.scss';
@@ -40,6 +40,8 @@ class InputBox extends Component{
             ({data}) => {
               if(data.code === 200){
                 let userInfo = data;
+                this.props.getRecommendResource();
+                this.props.history.push('/find');
                 getLoginStatus().then(({data}) => {
                   if(data.code === 200){
                       this.props.rememberAccount(data.profile);
@@ -137,6 +139,9 @@ const mapDispatchToProps = (dispatch) => {
   return{
     rememberAccount(value){
       dispatch(rememberAccount(value));
+    },
+    getRecommendResource(){
+      dispatch(getRecommendResource());
     }
   }
 }

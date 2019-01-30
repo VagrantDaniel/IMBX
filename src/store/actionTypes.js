@@ -1,5 +1,8 @@
 export const Login_Type = 'Login_Type';
 export const Remember_Account = 'Remember_Account';
+// 获得每日推荐歌曲
+export const Recommend_Songs = 'Recommend_Songs';
+// 获得每日推荐歌单
 export const Recommend_Resource = 'Recommend_Resource';
 export const Update_Recomend = 'Update_Recomend';
 export const Current_Music = 'Current_Music';

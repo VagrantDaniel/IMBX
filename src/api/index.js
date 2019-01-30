@@ -16,7 +16,6 @@ export function login (type, userName, password) {
 export function getLoginStatus () {
   axios.defaults.baseURL = HOST;
   let url = 'login/status';
-  console.log(axios);
   return axios.get(url);
 }
 
