@@ -30,6 +30,12 @@ type: types.Recommend_Resource,
 value
 })
 
+// 获取歌单详情
+export const getPlayListDetail = (value) => ({
+type: types.Playlist_Detail,
+value
+})
+
 // 记住当前播放音乐index
 // 更新当前播放音乐Index
 export const getRecommendSongIndex = (value) => ({

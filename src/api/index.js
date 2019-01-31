@@ -3,20 +3,29 @@ import { HOST } from '../common/js/config.js';
 
 //登录
 export function login (type, userName, password) {
+  axios.defaults.baseURL = HOST;
   let url = '';
   if(type === 0){
-    url =  HOST +　`login/cellphone?phone=${userName}&password=${password}`;
+    url = `login/cellphone?phone=${userName}&password=${password}`;
   }else{
-    url = HOST +　`login?email=${userName}&password=${password}`;
+    url = `login?email=${userName}&password=${password}`;
   }
+  console.log(axios.defaults.baseURL, axios)
   return axios.get(url);
 }
 
 // 获取登陆状态
 export function getLoginStatus () {
   axios.defaults.baseURL = HOST;
-  let url = 'login/status';
-  return axios.get(url);
+  let url = `login/status`;
+  // return axios.get(url);
+  return axios({
+    method: 'get',
+    url: url,
+    xhrFields: {
+      withCredentials: true
+    },
+  });
 }
 
 //获取用户详细信息
@@ -43,15 +52,22 @@ export function getUserSubcount () {
 export function getRecommendResource () {
   axios.defaults.baseURL = HOST;
   let url = `recommend/resource`;
-  return axios.get(url)
+  // return axios.get(url)
   // let url = HOST + 'recommend/resource';
-  // return axios({
-  //   method: 'get',
-  //   url: url,
-  //   xhrFields: {
-  //     withCredentials: true
-  //   },
-  // });
+  return axios({
+    method: 'get',
+    url: url,
+    xhrFields: {
+      withCredentials: true
+    },
+  });
+}
+
+// 获取歌单详情
+export function getPlayListDetail (id) {
+  axios.defaults.baseURL = HOST;
+  let url = `playlist/detail?id=${id}`;
+  return axios.get(url);
 }
 
 // 获得每日推荐歌曲

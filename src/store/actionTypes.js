@@ -4,6 +4,8 @@ export const Remember_Account = 'Remember_Account';
 export const Recommend_Songs = 'Recommend_Songs';
 // 获得每日推荐歌单
 export const Recommend_Resource = 'Recommend_Resource';
+// 获取歌单详情
+export const Playlist_Detail = 'Playlist_Detail';
 export const Update_Recomend = 'Update_Recomend';
 export const Current_Music = 'Current_Music';
 export const Song_Url = 'Song_Url';

@@ -1,6 +1,6 @@
 import * as types from './actionTypes';
 import {　login, getUserDetail, getUserSubcount, getLoginStatus, getRecommendResource, getRecommendSongs,
-getSongUrl, updateRecommendSongList, updatePlayNext } from '../api';
+getSongUrl, updateRecommendSongList, updatePlayNext, getPlayListDetail } from '../api';
 import { PLAY_MODE_TYPES } from '../common/js/config';
 const DEFAULT_VOLUME = 0.5;
 const defaultState = {
@@ -24,6 +24,7 @@ const defaultState = {
   recommend: {
     name: '推荐歌单',
     songSheetList: null,
+    playlist: null,
   },
   // 推荐音乐歌单列表
   RecommendResourceList: null,
@@ -100,10 +101,19 @@ export const reducer = (state = defaultState, action) => {
     case types.Recommend_Resource:
         newState = deepClone(state);
         getRecommendResource().then(( {data} ) => {
-          console.log('recommend', data.recommend)
           newState.recommend.songSheetList = data.recommend;
         }).catch((e) => {
           console.log('获得每日推荐歌单失败', e)
+        })
+        return newState;
+    // 获取歌单详情
+    case types.Playlist_Detail:
+        newState = deepClone(state);
+        getPlayListDetail(action.value).then(( {data} ) => {
+          console.log(data)
+          newState.recommend.playlist = data.playlist;
+        }).catch((e) => {
+          console.log('获取歌单详情失败', e)
         })
         return newState;
     // 更新每日推荐歌单

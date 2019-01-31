@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { formatPlayCount } from '../../common/js/util';
+import { getPlayListDetail } from '../../store/actionCreator';
 import './songSheet.scss';
 
 class SongSheet extends Component{
@@ -20,7 +21,7 @@ class SongSheet extends Component{
             this.props.songSheetList ?
             this.props.songSheetList.map((item, key) => {
               return (
-                <li key={ item.id }>
+                <li key={ item.id } onClick={ () => this.props.getPlayListDetail(item.id) }>
                   <img src={ item.picUrl } alt="" />
                   <h6 className="playedAmount"><i className="iconfont earphone">&#xe61b;</i>{ formatPlayCount(item.playcount) }万</h6>
                   <h3 className="name">{ item.name }</h3>
@@ -41,6 +42,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    getPlayListDetail(value) {
+      dispatch(getPlayListDetail(value));
+    }
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(SongSheet);
+export default connect(null, mapDispatchToProps)(SongSheet);

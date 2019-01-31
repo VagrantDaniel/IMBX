@@ -41,7 +41,7 @@ class InputBox extends Component{
               if(data.code === 200){
                 let userInfo = data;
                 this.props.getRecommendResource();
-                this.props.history.push('/find');
+                // this.props.history.push('/find');
                 getLoginStatus().then(({data}) => {
                   if(data.code === 200){
                       this.props.rememberAccount(data.profile);
