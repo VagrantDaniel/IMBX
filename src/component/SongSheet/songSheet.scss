@@ -2,7 +2,8 @@
 @import '../../common/css/variable.scss';
 .songSheet{
   position: relative;
-  height: 50%;
+  margin-top: .2rem;
+  height: 80%;
   .header{
     position: relative;
     width: 100%;
@@ -16,8 +17,9 @@
     margin-bottom: .13rem;
     background: #fff;
     .arrowR{
-      margin-left: .13rem;
-      color: #999;
+      font-size: 30px;
+      margin-left: .1rem;
+      color: #666;
     }
   }
   .songSheetList{
@@ -50,7 +52,8 @@
         @include font-dpr(12px);
         color: #fff;
         .earphone{
-
+          font-size: 30px;
+          margin-right: .03rem;
         }
       }
       .name{

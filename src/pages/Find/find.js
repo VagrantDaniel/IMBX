@@ -184,7 +184,7 @@ class Find extends Component{
     this.changeTabs = this.changeTabs.bind(this);
   }
   changeTabs(key){
-    console.log('key', key);
+    // console.log('key', key);
   }
   // componentWillReceiveProps(nextProps){
   //   if(!nextProps.currentMusic){
@@ -209,14 +209,14 @@ class Find extends Component{
     return(
       <div className="find">
         <div className="findTabs">
-          <Tabs defaultActiveKey="1" onChange={this.changeTabs}>
+          <Tabs defaultActiveKey="1" animated={false} onChange={this.changeTabs}>
            <TabPane tab="个性推荐" key="1">
               <ul className="mainList">
                 <NavLink
                   exact
-                  to='/srFM'
+                  to='/mrtj'
                   >
-                <li>
+                <li onClick={this.props.getRecommendSongs('每日推荐')}>
                   <div className="icoWrapper">
                     <i className="iconfont ico">&#xe60c;</i>
                   </div>
@@ -229,45 +229,44 @@ class Find extends Component{
                   onClick={this.props.handleSrFM}>
                 <li onClick={this.props.getRecommendSongs('每日推荐')}>
                   <div className="icoWrapper">
-                    <i className="iconfont ico">&#xe60c;</i>
+                    <i className="iconfont ico">&#xe6b0;</i>
                   </div>
                   <h3 className="tag_name">每日推荐</h3>
                 </li>
                 </NavLink>
                 <NavLink
                   exact
-                  to='/gd'
+                  to='/mrtj'
                   onClick={this.props.handleSrFM}>
-                <li>
+                <li onClick={this.props.getRecommendSongs('每日推荐')}>
                   <div className="icoWrapper">
-                    <i className="iconfont ico">&#xe60c;</i>
+                    <i className="iconfont ico">&#xe601;</i>
                   </div>
                   <h3 className="tag_name">歌单</h3>
                 </li>
                 </NavLink>
                 <NavLink
                   exact
-                  to='/phb'
+                  to='/mrtj'
                   onClick={this.props.handleSrFM}>
-                <li>
+                <li onClick={this.props.getRecommendSongs('每日推荐')}>
                   <div className="icoWrapper">
-                    <i className="iconfont ico">&#xe60c;</i>
+                    <i className="iconfont ico">&#xe60f;</i>
                   </div>
                   <h3 className="tag_name">排行榜</h3>
                 </li>
                 </NavLink>
               </ul>
+              <SongSheet songSheetList={ recommend }></SongSheet>
            </TabPane>
            <TabPane tab="主播电台" key="2"></TabPane>
          </Tabs>
-         <SongSheet songSheetList={ recommend }></SongSheet>
         </div>
       </div>
     )
   }
 }
 const mapStateToProps = (state) => {
-  console.log('state', state.reducer)
   return {
     recommendName: state.reducer.recommend.name,
     recommendSongSheetList: state.reducer.recommend.songSheetList,

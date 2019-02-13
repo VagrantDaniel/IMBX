@@ -15,7 +15,7 @@ class SongSheet extends Component{
   render(){
     return(
       <div className="songSheet">
-        <div className="header">推荐歌单<i className="iconfont arrowR">&#xe61b;</i></div>
+        <div className="header">推荐歌单<i className="iconfont arrowR">&#xe652;</i></div>
         <ul className="songSheetList">
           {
             this.props.songSheetList ?
@@ -23,7 +23,7 @@ class SongSheet extends Component{
               return (
                 <li key={ item.id } onClick={ () => this.props.getPlayListDetail(item.id) }>
                   <img src={ item.picUrl } alt="" />
-                  <h6 className="playedAmount"><i className="iconfont earphone">&#xe61b;</i>{ formatPlayCount(item.playcount) }万</h6>
+                  <h6 className="playedAmount"><i className="iconfont earphone">&#xe60a;</i>{ formatPlayCount(item.playcount) }万</h6>
                   <h3 className="name">{ item.name }</h3>
                 </li>
               )

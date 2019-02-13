@@ -95,12 +95,14 @@
       li{
         position: relative;
         height: 1.2rem;
+        line-height: 1.2rem;
         display: flex;
         justify-content: flex-start;
         align-items: center;
         @include font-dpr(16px);
         color: #000;
         border: 1px solid #C3BBBD;
+        overflow: hidden;
         &.playing{
           color: $headerBc !important;
           .music_playing{
@@ -116,6 +118,7 @@
           margin-right: 0;
         }
         span{
+          height: 100%;
           margin-left: .13rem;
           margin-right: .13rem;
           &.music_name{
@@ -127,6 +130,7 @@
           }
           &.artists{
             margin-left: 0;
+            margin-right: 10%;
             margin-top: 4px;
             @include font-dpr(12px);
             color: #999;

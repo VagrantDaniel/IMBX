@@ -16,6 +16,7 @@ class MusicLyric extends Component {
     }
   }
   componentDidMount(){
+    this.mount = true;
     this.props.onRef(this);
   }
   componentWillReceiveProps(nextProps) {
@@ -35,16 +36,21 @@ class MusicLyric extends Component {
        // 如果之前已经有被处理过的歌词的话，先将原来的歌词暂停
        this.state.lyric.stop();
      }
-    let lyric = new Lyric(nextProps.currentMusicLyric.lrc.lyric,this.handleLyric);
-    this.setState(() => ({
-      lyric: lyric,
-      noLyric: false
-    }),
-    () => {
-      // 初始化完成之后，播放当前歌词
-      this.state.lyric.play();
-      this.refs.lyricList.scrollTo(0, 0);
-    });
+    if(this.mount){
+      let lyric = new Lyric(nextProps.currentMusicLyric.lrc.lyric,this.handleLyric);
+      this.setState(() => ({
+        lyric: lyric,
+        noLyric: false
+      }),
+      () => {
+        // 初始化完成之后，播放当前歌词
+        this.state.lyric.play();
+        this.refs.lyricList.scrollTo(0, 0);
+      });
+    }
+  }
+  componentWillUnmount(){
+    this.mount = false;
   }
   seek = (startTime) => {
     this.state.lyric.seek(startTime * 1000);
@@ -54,19 +60,20 @@ class MusicLyric extends Component {
     if (this.state.noLyric) {
       return;
     }
-    this.setState(() => ({
-      currentLineNum: lineNum
-    }));
-    if (lineNum > 5) {
-      const parentDom = document.querySelector('.lyric_container');
-      // console.log('parentDom', parentDom.scrollHeight, parentDom.childNodes[lineNum].offsetTop)
-      const distance =
-      parentDom.childNodes[lineNum].offsetTop -
-      72 -
-      (parentDom.childNodes[5].offsetTop - 72);
-      this.refs.lyricList.scrollTo(0, distance);
-    } else {
-      this.refs.lyricList.scrollTo(0, 0);
+    if(this.mount){
+      this.setState(() => ({
+        currentLineNum: lineNum
+      }));
+      if (lineNum > 5) {
+        const parentDom = document.querySelector('.lyric_container');
+        const distance =
+        parentDom.childNodes[lineNum].offsetTop -
+        72 -
+        (parentDom.childNodes[5].offsetTop - 72);
+        this.refs.lyricList.scrollTo(0, distance);
+      } else {
+        this.refs.lyricList.scrollTo(0, 0);
+      }
     }
   };
   render() {
@@ -104,4 +111,5 @@ const mapDispatchToProps = (value) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MusicLyric)
+export default connect(mapStateToProps, mapDispatchToProps, null,
+  { forwardRef: true })(MusicLyric)

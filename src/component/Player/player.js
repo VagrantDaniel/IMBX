@@ -166,7 +166,7 @@ class Player extends Component {
         {/*控制按钮*/}
         <div className="control">
           {/*上一首*/}
-          <a href="javascript:;" className="iconfont btnNext" onClick={this.props.playPrevMusic}>&#xe61b;</a>
+          <a href="javascript:;" className="iconfont btnNext" onClick={this.props.playPrevMusic}>&#xe619;</a>
           {/*播放*/}
           {
             this.props.playing ?

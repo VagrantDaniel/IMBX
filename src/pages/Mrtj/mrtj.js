@@ -14,7 +14,7 @@ class Mrtj extends Component {
     this.moreDetails = this.moreDetails.bind(this);
     this.changeCurrentMusic = this.changeCurrentMusic.bind(this);
   }
-  componentDidMount () {
+  componentWillReceiveProps () {
     this.props.getChangePlayListAction(this.props.musicList);
   }
   changeCurrentMusic (e){

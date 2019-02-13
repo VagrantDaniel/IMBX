@@ -80,7 +80,7 @@ class MusicList extends Component {
                   <i className="iconfont btnType">&#xe619;</i><span>随机播放(30)</span>
                 </div>
                 <div className="rBtn">
-                  <i className="iconfont collect">&#xe619;</i><span>收藏全部</span><span className="line">|</span><i className="iconfont delAll">&#xe619;</i>
+                  <i className="iconfont collect">&#xe62d;</i><span>收藏全部</span><span className="line">|</span><i className="iconfont delAll">&#xe61a;</i>
                 </div>
               </div>
               <ul className="music_list">
@@ -89,7 +89,7 @@ class MusicList extends Component {
                     return (
                       <li key={item.id} className={item.id === this.state.currentIndex ?
                       'playing' : null} data-key={i} onClick={this.musicDemand}>
-                        <i className="music_playing iconfont">&#xe619;</i>
+                        <i className="music_playing iconfont">&#xe605;</i>
                         <span className="music_name">{item.name}</span>
                         <span className="line">-</span>
                         <span className="artists">{item.artists ?
@@ -97,7 +97,7 @@ class MusicList extends Component {
                             return item.name
                           }) : null
                         }</span>
-                        <i className="music_close iconfont" onClick={this.wipeOffCur}>&#xe619;</i>
+                        <i className="music_close iconfont" onClick={this.wipeOffCur}>&#xe66e;</i>
                       </li>
                     )
                   })
@@ -113,7 +113,6 @@ class MusicList extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log('playList', state.reducer)
   return {
     playList: state.reducer.playList,
     currentIndex: state.reducer.currentIndex,

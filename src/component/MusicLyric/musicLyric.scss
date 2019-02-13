@@ -13,6 +13,7 @@
     @include font-dpr(16px);
     text-align: center;
     &.lyric-list{
+      overflow: hidden;
       color: #999;
     }
     &.highlight{

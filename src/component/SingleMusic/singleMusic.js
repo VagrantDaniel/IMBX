@@ -286,8 +286,8 @@ class SingleMusic extends Component {
           <span className="line">-</span>
           {this.props.info.album.name ? this.props.info.album.name : null}</div>
         </div>
-        <div className="singleMusic_video iconfont">&#xe60c;</div>
-        <div className="singleMusic_more iconfont" onClick={this.props.readMore}>&#xe60c;</div>
+        <div className="singleMusic_video iconfont">&#xe61e;</div>
+        <div className="singleMusic_more iconfont" onClick={this.props.readMore}>&#xe610;</div>
       </li>
     )
   }

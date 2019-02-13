@@ -6,21 +6,29 @@
     height: 100%;
     line-height: 1.07rem;
     background: #fff;
-    .ant-tabs-nav{
-      width: 60%;
-      left: 50%;
-      transform: translateX(-50%);
-      .ant-tabs-tab{
-        height: 1.07rem;
-        width: 50%;
-        @include font-dpr(18px);
-        text-align: center;
-        margin: 0
-      }
-      .ant-tabs-ink-bar{
-        width: 1rem !important;
-        left: 17%;
-        // transform: translateX(-23%) !important;
+    .ant-tabs-nav-wrap{
+      background: $headerBc;
+      .ant-tabs-nav{
+        width: 60%;
+        left: 50%;
+        transform: translateX(-50%);
+        .ant-tabs-tab{
+          height: 1.07rem;
+          width: 50%;
+          @include font-dpr(14px);
+          text-align: center;
+          color:#fff;
+          margin: 0
+        }
+        .ant-tabs-ink-bar{
+          height: .09rem;
+          border-radius: .27rem;
+          width: .6rem !important;
+          left: 20%;
+          margin-bottom: .13rem;
+          background-color: #fff;
+          // transform: translateX(-23%) !important;
+        }
       }
     }
     .mainList{

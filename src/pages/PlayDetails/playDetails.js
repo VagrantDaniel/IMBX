@@ -53,9 +53,7 @@ class PlayDetails extends Component{
     this.musicList.showMusicList();
   }
   onRef = (ref) => {
-    // this.musicLyric = ref;
-    this.musicList = ref;
-
+    this.musicLyric = ref;
   }
   onRef1 = (ref) => {
     this.musicList = ref;

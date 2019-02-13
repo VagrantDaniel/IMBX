@@ -52,15 +52,15 @@ export function getUserSubcount () {
 export function getRecommendResource () {
   axios.defaults.baseURL = HOST;
   let url = `recommend/resource`;
-  // return axios.get(url)
+  return axios.get(url)
   // let url = HOST + 'recommend/resource';
-  return axios({
-    method: 'get',
-    url: url,
-    xhrFields: {
-      withCredentials: true
-    },
-  });
+  // return axios({
+  //   method: 'get',
+  //   url: url,
+  //   xhrFields: {
+  //     withCredentials: true
+  //   },
+  // });
 }
 
 // 获取歌单详情
