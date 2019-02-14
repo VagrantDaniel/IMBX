@@ -203,6 +203,7 @@ export const reducer = (state = defaultState, action) => {
       if(action.value){
         newState.playList = action.value;
       }
+      console.log(newState.playList)
       return newState;
     // 改变当前播放音乐信息
     case types.CHANGE_CURRENT_MUSIC:

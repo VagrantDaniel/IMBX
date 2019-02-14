@@ -107,12 +107,6 @@ const mapStateToProps = (state) => {
   return{
     currentMusic: state.reducer.currentMusic,
     currentMusicLyric: state.reducer.currentMusicLyric,
-    // recommendSongsList: state.reducer.recommendSongsList,
-    // recommendSongIndex: state.reducer.recommendSongIndex,
-    // audio: state.reducer.audio,
-    // played: state.reducer.played,
-    // buffered: state.reducer.buffered,
-    // playType: state.reducer.playType,
   }
 }
 const mapDispatchToProps = (dispatch) => {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getChangeCurrentMusic, wipeOffCur } from '../../store/actionCreator';
+import { getChangeCurrentMusic, wipeOffCurMusic } from '../../store/actionCreator';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import './musicList.scss';
 
@@ -23,26 +23,25 @@ class MusicList extends Component {
   }
   componentDidMount(){
       this.props.onRef1(this);
-      this.setState(() => ({
-        playList: this.props.playList,
-        currentIndex: this.props.currentIndex,
-      }));
   }
-  // componentWillReceiveProps(nextProps){
-  //   if(!nextProps.currentMusic){
-  //     return;
-  //   }
-  //   // 当上一个props 的歌曲和 这个 props 的歌曲一样时，直接返回
-  //    const r =
-  //      JSON.stringify(nextProps.playList) ===
-  //      JSON.stringify(this.props.playList);
-  //    if (r) {
-  //      return;
-  //    }
-  //    console.log('nextProps',nextProps)
-  //
-  //
-  // }
+  componentWillReceiveProps(nextProps){
+    console.log('nextProps', nextProps)
+    if(!nextProps.playList){
+      return;
+    }
+    // 当上一个props 的歌曲和 这个 props 的歌曲一样时，直接返回
+     const r =
+       JSON.stringify(nextProps.playList) ===
+       JSON.stringify(this.props.playList);
+     if (r) {
+       // return;
+     }
+     console.log('nextProps', nextProps)
+     this.setState(() => ({
+       playList: nextProps.playList,
+       currentIndex: nextProps.currentIndex,
+     }));
+  }
   // 打开音乐播放列表事件
   showMusicList(){
     this.setState({
@@ -85,7 +84,7 @@ class MusicList extends Component {
             <div className="drawerBox">
               <div className="header">
                 <div className="lBtn">
-                  <i className="iconfont btnType">&#xe619;</i><span>随机播放(30)</span>
+                  <i className="iconfont btnType">&#xe619;</i><span>随机播放({this.state.playList.length})</span>
                 </div>
                 <div className="rBtn">
                   <i className="iconfont collect">&#xe62d;</i><span>收藏全部</span><span className="line">|</span><i className="iconfont delAll">&#xe61a;</i>
@@ -95,7 +94,7 @@ class MusicList extends Component {
                 {
                   this.state.playList.map((item,i) => {
                     return (
-                      <li key={item.id} className={item.id === this.state.currentIndex ?
+                      <li key={item.id} className={i === this.state.currentIndex ?
                       'playing' : null} data-key={i} onClick={this.musicDemand}>
                         <i className="music_playing iconfont">&#xe605;</i>
                         <span className="music_name">{item.name}</span>
@@ -121,6 +120,7 @@ class MusicList extends Component {
 }
 
 const mapStateToProps = (state) => {
+  console.log('执行了')
   return {
     playList: state.reducer.playList,
     currentIndex: state.reducer.currentIndex,

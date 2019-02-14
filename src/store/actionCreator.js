@@ -124,27 +124,29 @@ export const getChangeVolumeAction = (value) => ({
 });
 
 // 删除当前播放列表音乐中指定音乐
-function wipeOffCurMusic(index){
+export const wipeOffCurMusic = (index) => {
 	return (dispatch, getState) => {
+		let index_int = parseInt(index);
 		const state = getState();
-		const currentIndex = state.reducer.currentIndex;
-		const len = state.reducer.playList.length - 1;
-		if(index === currentIndex){
-			state.reducer.playList.splice(index, 1);
-			dispatch(getChangePlayListAction(state.reducer.playList));
-			if(index === len){
+		let currentIndex = state.reducer.currentIndex;
+		let len = state.reducer.playList.length - 1;
+		let playList = state.reducer.playList;
+		console.log(playList)
+		if(index_int === currentIndex){
+			playList.splice(index_int, 1);
+			if(index_int === len - 1){
 				dispatch(getChangeCurrentIndex(0));
-			}else{
-				dispatch(getChangeCurrentIndex(currentIndex + 1));
 			}
-		}else if(index < currentIndex){
-				state.reducer.playList.splice(index, 1);
-				dispatch(getChangePlayListAction(state.reducer.playList));
+			dispatch(getChangePlayListAction(playList));
+			dispatch(playNextMusicAction());
+		}else if(index_int < currentIndex){
+				playList.splice(index_int, 1);
 				dispatch(getChangeCurrentIndex(currentIndex - 1));
+				dispatch(getChangePlayListAction(playList));
 		}else{
-				state.reducer.playList.splice(index, 1);
-				dispatch(getChangePlayListAction(state.reducer.playList));
-		}		
+				playList.splice(index_int, 1);
+				dispatch(getChangePlayListAction(playList));
+		}
 	}
 }
 
@@ -216,7 +218,6 @@ export const getChangeCurrentMusic = (value, loadCacheMusic = false) => {
 				let STOP = false;
 				dispatch(getChangePlayingStatusAction(STOP));
 			}
-
 		}).then(() => {
 			//				获取当前播放音乐歌词
 					dispatch(getCurrentMusicLyric());
@@ -228,9 +229,9 @@ export const getChangeCurrentMusic = (value, loadCacheMusic = false) => {
 export const playPrevMusicAction = () => {
 	return (dispatch, getState) => {
 		const state = getState();
-		const { musicList } = state.reducer;
+		const { playList } = state.reducer;
 		let { currentIndex } = state.reducer;
-		const len = musicList.length;
+		const len = playList.length;
 		if(len === 0 || len === 1){
 			return;
 		}
@@ -243,7 +244,7 @@ export const playPrevMusicAction = () => {
 		}else{
 			currentIndex = len - 1;
 		}
-		dispatch(getChangeCurrentMusic(musicList[currentIndex]));
+		dispatch(getChangeCurrentMusic(playList[currentIndex]));
 		dispatch(getChangeCurrentIndex(currentIndex));
 	}
 }
@@ -252,9 +253,9 @@ export const playPrevMusicAction = () => {
 export const playNextMusicAction = () => {
 	return (dispatch, getState) => {
 		const state = getState();
-		const { musicList } = state.reducer;
+		const { playList } = state.reducer;
 		let { currentIndex } = state.reducer;
-		const len = musicList.length;
+		const len = playList.length;
 		if(len === 0 || len === 1){
 			return;
 		}
@@ -267,7 +268,7 @@ export const playNextMusicAction = () => {
 		}else{
 			currentIndex = 0;
 		}
-		dispatch(getChangeCurrentMusic(musicList[currentIndex]));
+		dispatch(getChangeCurrentMusic(playList[currentIndex]));
 		dispatch(getChangeCurrentIndex(currentIndex));
 	}
 }

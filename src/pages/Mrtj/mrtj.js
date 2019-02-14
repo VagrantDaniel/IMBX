@@ -13,6 +13,7 @@ class Mrtj extends Component {
     super(props);
     console.log('每日推荐', this.props)
     this.state = {
+      headerName: '',
       musicList: '',
     }
     this.moreDetails = this.moreDetails.bind(this);
@@ -64,7 +65,7 @@ class Mrtj extends Component {
           <Link to="/find">
             <i className="iconfont icon">&#xe611;</i>
           </Link>
-          <div className="header-name">{this.props.headerName}</div>
+          <div className="header-name">{this.state.headerName}</div>
         </div>
         <ul className="musicList">
           {
@@ -86,7 +87,6 @@ const mapStateToProps = (state) => {
   return {
     headerName: state.reducer.headerName,
     musicList: state.reducer.musicList,
-    currentIndex: state.reducer.currentIndex,
     // recommendSongsList: state.reducer.recommendSongsList,
     // recommendSongIndex: state.reducer.recommendSongIndex,
   }
