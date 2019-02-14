@@ -29,10 +29,8 @@ class InputBox extends Component{
 
   loginSubmit = (e) => {
     e.preventDefault();
-      console.log('正在登陆');
     this.props.form.validateFields((err, values) => {
       if (!err) {
-         console.log('Received values of form: ', values);
          // 加载中
          this.setState({ loading: true });
 //        this.props.rememberAccount(values);

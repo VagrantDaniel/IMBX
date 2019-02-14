@@ -49,9 +49,15 @@ class MusicLyric extends Component {
       });
     }
   }
-  componentWillUnmount(){
-    this.mount = false;
+  // 歌词继续滚动
+  playLyric = () => {
+    this.state.lyric.togglePlay();
   }
+  // 停止歌词滚动
+  stopLyric = () => {
+    this.state.lyric.stop();
+  }
+  // 指定到位置歌词
   seek = (startTime) => {
     this.state.lyric.seek(startTime * 1000);
   };
@@ -76,6 +82,9 @@ class MusicLyric extends Component {
       }
     }
   };
+  componentWillUnmount(){
+    this.mount = false;
+  }
   render() {
     return(
       <ul className="lyric_container" ref="lyricList">
@@ -93,7 +102,7 @@ class MusicLyric extends Component {
                   {item.txt}
                 </li>
               );
-            }): null
+            }): <li className="noLyric">暂无歌词</li>
           }
       </ul>
     )

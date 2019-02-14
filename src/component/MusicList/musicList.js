@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getChangeCurrentMusic } from '../../store/actionCreator';
+import { getChangeCurrentMusic, wipeOffCur } from '../../store/actionCreator';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import './musicList.scss';
 
@@ -61,8 +61,16 @@ class MusicList extends Component {
     this.props.getChangeCurrentMusic(this.state.playList[index]);
   }
   // 移除选中音乐
-  wipeOffCur(){
-
+  wipeOffCur(e){
+    e.preventDefault();
+    e.stopPropagation();
+    let index = e.target.parentNode.getAttribute('data-key');
+    // 删除的当前正在播放的音乐
+    if(this.state.playList.length === 1){
+      this.props.history.push('/mrtj');
+    }else{
+      this.props.wipeOffCur(index);
+    }
   }
   render() {
     return(
@@ -123,7 +131,10 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getChangeCurrentMusic(value) {
       dispatch(getChangeCurrentMusic(value));
-    }
+    },
+    wipeOffCur(value){
+      dispatch(wipeOffCurMusic(value));
+    },
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(MusicList);

@@ -11,10 +11,36 @@ import './mrtj.scss';
 class Mrtj extends Component {
   constructor(props) {
     super(props);
+    console.log('每日推荐', this.props)
+    this.state = {
+      musicList: '',
+    }
     this.moreDetails = this.moreDetails.bind(this);
     this.changeCurrentMusic = this.changeCurrentMusic.bind(this);
   }
-  componentWillReceiveProps () {
+  componentDidMount(){
+    console.log('didmount', this.props)
+    if(this.props.musicList){
+      this.setState(() => ({
+        musicList: this.props.musicList,
+      }));
+    }
+  }
+  componentWillReceiveProps (nextProps) {
+    console.log('nextProps', nextProps)
+    if(!nextProps.musicList){
+      return;
+    }
+    // 当上一个props 的歌词和 这个 props 的歌词一样时，直接返回
+     const r =
+       JSON.stringify(nextProps.musicList) ===
+       JSON.stringify(this.props.musicList);
+     if (r) {
+       return;
+     }
+     this.setState(() => ({
+       musicList: nextProps.musicList,
+     }));
     this.props.getChangePlayListAction(this.props.musicList);
   }
   changeCurrentMusic (e){
@@ -42,8 +68,8 @@ class Mrtj extends Component {
         </div>
         <ul className="musicList">
           {
-            this.props.musicList ?
-            this.props.musicList.map((item, key) => {
+            this.state.musicList ?
+            this.state.musicList.map((item, key) => {
               return(
                 <SingleMusic info={item} key={item.id} dataKey={key} changeCurrentMusic={ this.changeCurrentMusic } readMore={this.moreDetails}/>
               )
@@ -56,6 +82,7 @@ class Mrtj extends Component {
   }
 }
 const mapStateToProps = (state) => {
+  console.log('state', state)
   return {
     headerName: state.reducer.headerName,
     musicList: state.reducer.musicList,
@@ -74,4 +101,4 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
 }
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Mrtj));
+export default connect(mapStateToProps, mapDispatchToProps)(Mrtj);

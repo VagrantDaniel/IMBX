@@ -123,6 +123,30 @@ export const getChangeVolumeAction = (value) => ({
 	value
 });
 
+// 删除当前播放列表音乐中指定音乐
+function wipeOffCurMusic(index){
+	return (dispatch, getState) => {
+		const state = getState();
+		const currentIndex = state.reducer.currentIndex;
+		const len = state.reducer.playList.length - 1;
+		if(index === currentIndex){
+			state.reducer.playList.splice(index, 1);
+			dispatch(getChangePlayListAction(state.reducer.playList));
+			if(index === len){
+				dispatch(getChangeCurrentIndex(0));
+			}else{
+				dispatch(getChangeCurrentIndex(currentIndex + 1));
+			}
+		}else if(index < currentIndex){
+				state.reducer.playList.splice(index, 1);
+				dispatch(getChangePlayListAction(state.reducer.playList));
+				dispatch(getChangeCurrentIndex(currentIndex - 1));
+		}else{
+				state.reducer.playList.splice(index, 1);
+				dispatch(getChangePlayListAction(state.reducer.playList));
+		}		
+	}
+}
 
 //		获取当前播放音乐歌词
 function getCurrentMusicLyric(){

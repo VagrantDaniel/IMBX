@@ -5,6 +5,7 @@ class SongSheet extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      headerName: '歌单',
       coverImgUrl: null,
       name: null,
       description: null,
@@ -38,7 +39,16 @@ render(){
         <Link to="/find">
           <i className="iconfont icon">&#xe611;</i>
         </Link>
-        <div className="header-name">{this.props.headerName}</div>
+        <div className="header-name">{this.state.headerName}</div>
+      </div>
+      <div className="nav">
+        <div className="coverImg">
+          <img src={ this.state.coverImgUrl } alt=""/>
+        </div>
+        <div className="details">
+          <div className="name">{ this.state.name }</div>
+          <div className="description">{ this.state.description }</div>
+        </div>
       </div>
     </div>
   )

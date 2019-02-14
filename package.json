@@ -2,6 +2,7 @@
   "name": "imbx",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:3000",
   "dependencies": {
     "antd": "^3.12.2",
     "axios": "^0.18.0",
@@ -25,7 +26,7 @@
   "scripts": {
     "build-css": "node-sass src/ -o src/",
     "watch-css": "npm run build-css && node-sass src/ -o src/ --watch --recursive",
-    "start": "export PORT=8080 && react-app-rewired start",
+    "start": "set PORT=8080 && react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"

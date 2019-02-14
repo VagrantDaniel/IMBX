@@ -93,11 +93,6 @@ class Player extends Component {
      audio.volume = 0.5;
      audio.addEventListener('timeupdate',this.playProgress);
   }
-  componentWillUnmount(){
-    const audio = this.refs.audio;
-    audio.removeEventListener('timeupdate',this.playProgress);
-  }
-
   // 拖动进度条事件
   progressChangeTime(e){
     const audio = this.refs.audio;
@@ -112,8 +107,10 @@ class Player extends Component {
     this.props.changePlayingStatus(status);
     if (status == PLAYING_STATUS.playing) {
       audio.play();
+      this.props.playLyric();
     } else {
       audio.pause();
+      this.props.stopLyric();
     }
     // 如果歌曲详情已经显示了，就对歌词进行暂停
     if (this.props.showMusicDetail) {
@@ -145,6 +142,10 @@ class Player extends Component {
     if(audio.ended){
       this.props.playNextMusic();
     }
+  }
+  componentWillUnmount(){
+    const audio = this.refs.audio;
+    audio.removeEventListener('timeupdate',this.playProgress);
   }
   render() {
     return(

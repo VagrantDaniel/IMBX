@@ -25,6 +25,10 @@ class PlayDetails extends Component{
     this.changeMusicLyric = this.changeMusicLyric.bind(this);
     // 点击显示歌曲列表
     this.showMusicList = this.showMusicList.bind(this);
+    // 点击暂停音乐按钮时禁止歌词滚动
+    this.stopLyric = this.stopLyric.bind(this);
+    // 歌词继续滚动
+    this.playLyric = this.playLyric.bind(this);
   }
   componentWillReceiveProps(nextProps){
     if(!nextProps.currentMusic){
@@ -47,6 +51,14 @@ class PlayDetails extends Component{
   // 滚动条拖动后修改歌词
   changeMusicLyric (currentTime) {
     this.musicLyric.seek(currentTime);
+  }
+  // 歌词继续滚动
+  playLyric () {
+    this.musicLyric.playLyric();
+  }
+  // 点击暂停音乐按钮时禁止歌词滚动
+  stopLyric () {
+    this.musicLyric.stopLyric();
   }
   // 点击显示歌曲列表
   showMusicList () {
@@ -82,7 +94,7 @@ class PlayDetails extends Component{
           {/*功能列表*/}
           {/*播放器*/}
           <Player ref="player" currentMusicSrc={ this.state.musicUrl } getChangePosLyric={ this.changeMusicLyric }
-          showMusicList={ this.showMusicList }></Player>
+          showMusicList={ this.showMusicList } playLyric={ this.playLyric } stopLyric={ this.stopLyric }></Player>
           // 音乐列表
           <MusicList onRef1={this.onRef1}></MusicList>
         </div>

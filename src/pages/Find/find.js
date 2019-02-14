@@ -182,9 +182,13 @@ class Find extends Component{
         },]},
     }
     this.changeTabs = this.changeTabs.bind(this);
+    this.getRecommendSongs = this.getRecommendSongs.bind(this);
   }
   changeTabs(key){
     // console.log('key', key);
+  }
+  getRecommendSongs(){
+    this.props.getRecommendSongs('每日推荐');
   }
   // componentWillReceiveProps(nextProps){
   //   if(!nextProps.currentMusic){
@@ -214,9 +218,8 @@ class Find extends Component{
               <ul className="mainList">
                 <NavLink
                   exact
-                  to='/mrtj'
-                  >
-                <li onClick={this.props.getRecommendSongs('每日推荐')}>
+                  to='/mrtj'>
+                <li onClick={this.getRecommendSongs}>
                   <div className="icoWrapper">
                     <i className="iconfont ico">&#xe60c;</i>
                   </div>
@@ -225,9 +228,8 @@ class Find extends Component{
                 </NavLink>
                 <NavLink
                   exact
-                  to='/mrtj'
-                  onClick={this.props.handleSrFM}>
-                <li onClick={this.props.getRecommendSongs('每日推荐')}>
+                  to='/mrtj'>
+                <li onClick={this.getRecommendSongs}>
                   <div className="icoWrapper">
                     <i className="iconfont ico">&#xe6b0;</i>
                   </div>
@@ -236,9 +238,8 @@ class Find extends Component{
                 </NavLink>
                 <NavLink
                   exact
-                  to='/mrtj'
-                  onClick={this.props.handleSrFM}>
-                <li onClick={this.props.getRecommendSongs('每日推荐')}>
+                  to='/mrtj'>
+                <li onClick={this.getRecommendSongs}>
                   <div className="icoWrapper">
                     <i className="iconfont ico">&#xe601;</i>
                   </div>
@@ -247,9 +248,8 @@ class Find extends Component{
                 </NavLink>
                 <NavLink
                   exact
-                  to='/mrtj'
-                  onClick={this.props.handleSrFM}>
-                <li onClick={this.props.getRecommendSongs('每日推荐')}>
+                  to='/mrtj'>
+                <li onClick={this.getRecommendSongs}>
                   <div className="icoWrapper">
                     <i className="iconfont ico">&#xe60f;</i>
                   </div>

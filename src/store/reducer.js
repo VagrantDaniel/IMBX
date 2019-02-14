@@ -93,6 +93,7 @@ export const reducer = (state = defaultState, action) => {
         newState.headerName = action.value;
         // newState.recommendSongsList = data.recommend;
         newState.musicList = data.recommend;
+        newState.playList = data.recommend;
       }).catch((e) => {
         console.log('获得每日推荐歌曲失败', e)
       })
