@@ -24,7 +24,6 @@ const defaultState = {
   recommend: {
     name: '推荐歌单',
     songSheetList: null,
-    playlist: null,
   },
   // 推荐音乐歌单列表
   RecommendResourceList: null,
@@ -186,7 +185,8 @@ export const reducer = (state = defaultState, action) => {
     // 改变音乐播放模式
     case types.CHANGE_PLAY_MODE:
       newState = deepClone(state);
-      if(action.value){
+      if(action.value != null){
+        console.log('action.value', action.value)
         newState.playMode = action.value;
       }
       return newState;

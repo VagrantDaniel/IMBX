@@ -4,14 +4,12 @@ import { Link, withRouter } from 'react-router-dom';
 import { getChangeCurrentMusic, getChangePlayListAction } from '../../store/actionCreator';
 import SingleMusic from '../../component/SingleMusic/singleMusic';
 import DrawerBox from '../../component/DrawerBox/drawBox';
-// import { getRecommendResource } from '../../store/actionCreator';
 import './mrtj.scss';
 
 // 每日推荐歌单
 class Mrtj extends Component {
   constructor(props) {
     super(props);
-    console.log('每日推荐', this.props)
     this.state = {
       headerName: '',
       musicList: '',
@@ -20,15 +18,14 @@ class Mrtj extends Component {
     this.changeCurrentMusic = this.changeCurrentMusic.bind(this);
   }
   componentDidMount(){
-    console.log('didmount', this.props)
     if(this.props.musicList){
       this.setState(() => ({
+        headerName: this.props.headerName,
         musicList: this.props.musicList,
       }));
     }
   }
   componentWillReceiveProps (nextProps) {
-    console.log('nextProps', nextProps)
     if(!nextProps.musicList){
       return;
     }
@@ -40,6 +37,7 @@ class Mrtj extends Component {
        return;
      }
      this.setState(() => ({
+       headerName: nextProps.headerName,
        musicList: nextProps.musicList,
      }));
     this.props.getChangePlayListAction(this.props.musicList);
@@ -83,7 +81,6 @@ class Mrtj extends Component {
   }
 }
 const mapStateToProps = (state) => {
-  console.log('state', state)
   return {
     headerName: state.reducer.headerName,
     musicList: state.reducer.musicList,

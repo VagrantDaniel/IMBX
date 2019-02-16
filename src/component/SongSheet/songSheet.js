@@ -15,7 +15,7 @@ class SongSheet extends Component{
   render(){
     return(
       <div className="songSheet">
-        <div className="header">推荐歌单<i className="iconfont arrowR">&#xe652;</i></div>
+        <div className="header">{ this.props.songSheetName }<i className="iconfont arrowR">&#xe652;</i></div>
         <ul className="songSheetList">
           {
             this.props.songSheetList ?

@@ -59,10 +59,13 @@
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        .btnType{
+        .btnMode{
           color: #999;
           margin-left: .13rem;
           margin-right: .27rem;
+          &.rdMode{
+            margin-top: -.07rem;
+          }
         }
       }
       .rBtn{

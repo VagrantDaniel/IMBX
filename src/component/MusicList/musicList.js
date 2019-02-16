@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getChangeCurrentMusic, wipeOffCurMusic } from '../../store/actionCreator';
+import { getChangeCurrentMusic, wipeOffCurMusic, changePlayMode, loopCurMusic, playRdMusic, getChangePlayModeAction } from '../../store/actionCreator';
+import { PLAY_MODE_TYPES } from '../../common/js/config';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import './musicList.scss';
 
@@ -11,6 +12,7 @@ class MusicList extends Component {
       isMusicListShow: false,
       playList: null,
       currentIndex: 0,
+      playMode: 0,
     }
     // 打开音乐播放列表
     this.showMusicList = this.showMusicList.bind(this);
@@ -20,27 +22,45 @@ class MusicList extends Component {
     this.musicDemand = this.musicDemand.bind(this);
     // 移除选中音乐
     this.wipeOffCur = this.wipeOffCur.bind(this);
+    // 切换音乐播放状态
+    this.changePlayMode = this.changePlayMode.bind(this);
   }
   componentDidMount(){
       this.props.onRef1(this);
   }
   componentWillReceiveProps(nextProps){
-    console.log('nextProps', nextProps)
     if(!nextProps.playList){
       return;
     }
     // 当上一个props 的歌曲和 这个 props 的歌曲一样时，直接返回
      const r =
        JSON.stringify(nextProps.playList) ===
-       JSON.stringify(this.props.playList);
+       JSON.stringify(this.props.playList) && JSON.stringify(nextProps.playMode) ===
+       JSON.stringify(this.props.playMode);
      if (r) {
        // return;
      }
-     console.log('nextProps', nextProps)
      this.setState(() => ({
        playList: nextProps.playList,
        currentIndex: nextProps.currentIndex,
+       playMode: nextProps.playMode,
      }));
+  }
+  // 切换音乐播放模式
+  changePlayMode(value) {
+    switch (value) {
+      case 0:
+        this.props.changePlayMode(value);
+        break;
+      case 1:
+        this.props.changePlayMode(value);
+        break;
+      case 2:
+        this.props.changePlayMode(value);
+        break;
+      default:
+        this.props.changePlayMode(1);
+    }
   }
   // 打开音乐播放列表事件
   showMusicList(){
@@ -72,6 +92,7 @@ class MusicList extends Component {
     }
   }
   render() {
+    const { SEQUENCE_PLAY, RANDOM_PLAY, LOOP_PLAY } = PLAY_MODE_TYPES;
     return(
       <div className="musicList">
         <ReactCSSTransitionGroup transitionName="music-list-show"
@@ -84,7 +105,35 @@ class MusicList extends Component {
             <div className="drawerBox">
               <div className="header">
                 <div className="lBtn">
-                  <i className="iconfont btnType">&#xe619;</i><span>随机播放({this.state.playList.length})</span>
+                  {/*音乐播放模式*/}
+                  {/*随机播放*/}
+                  {
+                    this.state.playMode == RANDOM_PLAY ?
+                    <div>
+                      <i className="iconfont btnMode rdMode" onClick={() => {this.changePlayMode(SEQUENCE_PLAY)}}>&#xe628;</i>
+                      <span>随机播放({ this.state.playList.length })</span>
+                    </div>
+                    : ''
+                  }
+                  {/*列表循环*/}
+                  {
+                    this.state.playMode == SEQUENCE_PLAY ?
+                    <div>
+                      <i className="iconfont btnMode" onClick={() => {this.changePlayMode(LOOP_PLAY)}}>&#xe674;</i>
+                      <span>列表循环({ this.state.playList.length })</span>
+                    </div>
+                    : ''
+                  }
+                  {/*单曲循环*/}
+                  {
+                    this.state.playMode == LOOP_PLAY ?
+                    <div>
+                      <i className="iconfont btnMode" onClick={() => {this.changePlayMode(RANDOM_PLAY)}}>&#xe61f;</i>
+                      <span>单曲循环({ this.state.playList.length })</span>
+                    </div>
+                    : ''
+                  }
+
                 </div>
                 <div className="rBtn">
                   <i className="iconfont collect">&#xe62d;</i><span>收藏全部</span><span className="line">|</span><i className="iconfont delAll">&#xe61a;</i>
@@ -120,10 +169,10 @@ class MusicList extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log('执行了')
   return {
     playList: state.reducer.playList,
     currentIndex: state.reducer.currentIndex,
+    playMode: state.reducer.playMode,
   }
 }
 
@@ -134,6 +183,15 @@ const mapDispatchToProps = (dispatch) => {
     },
     wipeOffCur(value){
       dispatch(wipeOffCurMusic(value));
+    },
+    loopCurMusic () {
+      dispatch(loopCurMusic());
+    },
+    playRdMusic () {
+      dispatch(playRdMusic());
+    },
+    changePlayMode (value) {
+      dispatch(getChangePlayModeAction(value));
     },
   }
 }

@@ -55,9 +55,9 @@
     justify-content: space-around;
     align-items: center;
     color: #fff;
-    .btnType{
-      &.hide{
-        display: none;
+    .btnMode{
+      &.rdMode{
+        margin-top: -.07rem;
       }
     }
   }

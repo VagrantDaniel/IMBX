@@ -5,7 +5,8 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getChangePlayingStatusAction, playPrevMusicAction, playNextMusicAction, getChangePlayModeAction } from '../../store/actionCreator';
+import { getChangePlayingStatusAction, playPrevMusicAction, playNextMusicAction, getChangePlayModeAction,getLoginType,
+loopCurMusic, playRdMusic } from '../../store/actionCreator';
 import { PLAY_MODE_TYPES } from '../../common/js/config';
 import { formatTime } from '../../common/js/util';
 import './player.scss';
@@ -44,6 +45,8 @@ class Player extends Component {
       // 音量
       // 是否打开音乐播放列表
       isMusicListShow: false,
+      // 播放模式
+      playMode: 0,
     };
     // 更新进度条播放时间
     this.playProgress = this.playProgress.bind(this);
@@ -55,6 +58,8 @@ class Player extends Component {
     // this.clickChangeTime = this.clickChangeTime.bind(this);
     // 拖动进度条事件
     this.progressChangeTime = this.progressChangeTime.bind(this);
+    // 切换音乐播放状态
+    this.changePlayMode = this.changePlayMode.bind(this);
     // 进度条控制鼠标离开事件
     // this.mouseLeave = this.mouseLeave.bind(this);
 
@@ -70,12 +75,14 @@ class Player extends Component {
     // 当上一个props 的歌曲和 这个 props 的歌曲一样时，直接返回
      const r =
        JSON.stringify(nextProps.currentMusic) ===
-       JSON.stringify(this.props.currentMusic);
+       JSON.stringify(this.props.currentMusic) && JSON.stringify(nextProps.playMode) ===
+       JSON.stringify(this.props.playMode);
      if (r) {
        return;
      }
      this.setState(() => ({
        currentMusic: nextProps.currentMusic,
+       playMode: nextProps.playMode,
      }));
      audio.addEventListener('canplay', () => {
          // 获取总时间
@@ -101,7 +108,23 @@ class Player extends Component {
     audio.currentTime = percent * audio.duration;
     this.props.getChangePosLyric(audio.currentTime);
   }
-  // 播放当前选中音乐
+  // 切换音乐播放模式
+  changePlayMode(value) {
+    switch (value) {
+      case 0:
+        this.props.changePlayMode(value);
+        break;
+      case 1:
+        this.props.changePlayMode(value);
+        break;
+      case 2:
+        this.props.changePlayMode(value);
+        break;
+      default:
+        this.props.changePlayMode(1);
+    }
+  }
+  // 切换音乐播放状态
   handleChangePlayingStatus (status) {
     const audio = this.refs.audio;
     this.props.changePlayingStatus(status);
@@ -140,7 +163,20 @@ class Player extends Component {
       currentTime: formatTime(current_time),
     });
     if(audio.ended){
-      this.props.playNextMusic();
+      switch (this.state.playMode) {
+        case 0:
+          this.props.playNextMusic();
+          break;
+        case 1:
+          this.props.playRdMusic();
+          break;
+        case 2:
+          this.props.loopCurMusic();
+          break;
+        default:
+          this.props.playNextMusic();
+          break;
+      }
     }
   }
   componentWillUnmount(){
@@ -148,6 +184,7 @@ class Player extends Component {
     audio.removeEventListener('timeupdate',this.playProgress);
   }
   render() {
+    const { SEQUENCE_PLAY, RANDOM_PLAY, LOOP_PLAY } = PLAY_MODE_TYPES;
     return(
       <div className="reactMusicPlayer" id="reactMusicPlayer">
         {/*播放进度条*/}
@@ -166,6 +203,25 @@ class Player extends Component {
         </div>
         {/*控制按钮*/}
         <div className="control">
+          {/*音乐播放模式*/}
+          {/*随机播放*/}
+          {
+            this.state.playMode == RANDOM_PLAY ?
+            <a href="javascript:;" className="iconfont btnMode rdMode" onClick={() => {this.changePlayMode(SEQUENCE_PLAY)}}>&#xe628;</a>
+            : ''
+          }
+          {/*列表循环*/}
+          {
+            this.state.playMode == SEQUENCE_PLAY ?
+            <a href="javascript:;" className="iconfont btnMode" onClick={() => {this.changePlayMode(LOOP_PLAY)}}>&#xe674;</a>
+            : ''
+          }
+          {/*单曲循环*/}
+          {
+            this.state.playMode == LOOP_PLAY ?
+            <a href="javascript:;" className="iconfont btnMode" onClick={() => {this.changePlayMode(RANDOM_PLAY)}}>&#xe61f;</a>
+            : ''
+          }
           {/*上一首*/}
           <a href="javascript:;" className="iconfont btnNext" onClick={this.props.playPrevMusic}>&#xe619;</a>
           {/*播放*/}
@@ -191,7 +247,7 @@ const mapStateToProps = (state) => {
   return{
     playing: state.reducer.playing,
     playList: state.reducer.playList,
-    // playMode: state.reducer.playMode,
+    playMode: state.reducer.playMode,
     currentMusic: state.reducer.currentMusic,
     currentMusicSrc: state.reducer.currentMusicSrc,
   }
@@ -210,6 +266,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     playNextMusic () {
       dispatch(playNextMusicAction());
+    },
+    loopCurMusic () {
+      dispatch(loopCurMusic());
+    },
+    playRdMusic () {
+      dispatch(playRdMusic());
     }
   }
 }

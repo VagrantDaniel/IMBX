@@ -39,15 +39,17 @@ class InputBox extends Component{
               if(data.code === 200){
                 let userInfo = data;
                 this.props.getRecommendResource();
-                // this.props.history.push('/find');
-                getLoginStatus().then(({data}) => {
-                  if(data.code === 200){
-                      this.props.rememberAccount(data.profile);
-                      this.props.history.push('/find');
-                  }
-                }).catch((e) => {
-                  console.log('获取用户详细信息失败', e);
-                });
+                setTimeout(() => {
+                  getLoginStatus().then(({data}) => {
+                    if(data.code === 200){
+                        this.props.rememberAccount(data.profile);
+                        this.props.history.push('/find');
+                    }
+                  }).catch((e) => {
+                    console.log('获取用户详细信息失败', e);
+                  });
+                },1000);
+
               }else{
                 message.config({
                   top: '50%',
