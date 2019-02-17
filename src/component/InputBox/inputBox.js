@@ -61,33 +61,11 @@ class InputBox extends Component{
                 this.refs.userName.text = '';
                 this.refs.password.text = '';
               }
-
-//                  newState.isLogin = true;
-////                  getUserSubcount().then(({data}) => {
-////                     console.log('data', data);
-////                     }).catch((e) => {
-////                      console.log('获取用户歌单等信息失败', e);
-////                     });
-//              }else{
-//              console.log('data',data.code);
-//              }
-//              }).catch((e) => {
-//               console.log('获取登陆状态失败', e)
-//              })
-            // getUserSubcount().then(({data}) => {
-            //   console.log('data', data);
-            // }).catch((e) => {
-            //   console.log('获取用户歌单等信息失败', e);
-            // });
-            // getUserDetail(data.account.id).then(({data}) => {
-            //   // new
-            //   console.log('details', data)
         }).catch((e) => {
             console.log('登录失败了', e)
         });
       }else{
          console.log('输入用户名或密码有误！')
-        // this.props.rememberAccount();
       }
     });
   }
@@ -116,7 +94,7 @@ class InputBox extends Component{
               })(
               <div className="singleBox">
                 <i className="iconfont icon">&#xe640;</i>
-                <Input className="input_field" placeholder="密码" allowClear ref="password"></Input>
+                <Input.Password className="input_field" placeholder="密码" allowClear password="true" ref="password"></Input.Password>
               </div>
              )
           }

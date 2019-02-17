@@ -2,10 +2,10 @@
 @import '../../common/css/normalize.scss';
 @import '../../common/css/variable.scss';
 .inputBox{
-    position: relative;
+  position: relative;
   width: 100%;
   margin-top: 1.33rem;
-height: 100%;
+  height: 100%;
   background: #fff;
   .ant-form-explain{
     @include font-dpr(16px);
@@ -40,6 +40,10 @@ height: 100%;
         border: none;
         border-bottom: 1px solid white !important;
         box-shadow: none;
+    }
+    .ant-input-clear-icon{
+      float: right;
+      margin-left: .13rem;
     }
     .anticon{
       @include font-dpr(19px);
