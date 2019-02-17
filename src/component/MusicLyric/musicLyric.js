@@ -84,13 +84,13 @@ class MusicLyric extends Component {
   // 歌词继续滚动
   playLyric = () => {
     this.state.lyric.togglePlay();
-    rotateTimer = setInterval(() => {
-      this.setState({
-        angle: this.state.angle + 1
-      },() => {
-        this.refs.musicAvator.style.transform = `rotate(${this.state.angle}deg)`;
-      })
-    }, 33);
+    // rotateTimer = setInterval(() => {
+    //   this.setState({
+    //     angle: this.state.angle + 1
+    //   },() => {
+    //     this.refs.musicAvator.style.transform = `rotate(${this.state.angle}deg)`;
+    //   })
+    // }, 33);
   }
   // 停止歌词滚动
   stopLyric = () => {

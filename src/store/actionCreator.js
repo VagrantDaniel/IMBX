@@ -131,12 +131,12 @@ export const wipeOffCurMusic = (index) => {
 		let currentIndex = state.reducer.currentIndex;
 		let len = state.reducer.playList.length - 1;
 		let playList = state.reducer.playList;
-		console.log(playList)
 		if(index_int === currentIndex){
 			playList.splice(index_int, 1);
 			if(index_int === len - 1){
 				dispatch(getChangeCurrentIndex(0));
 			}
+			dispatch(getChangeCurrentIndex(currentIndex - 1));
 			dispatch(getChangePlayListAction(playList));
 			dispatch(playNextMusicAction());
 		}else if(index_int < currentIndex){
@@ -145,6 +145,7 @@ export const wipeOffCurMusic = (index) => {
 				dispatch(getChangePlayListAction(playList));
 		}else{
 				playList.splice(index_int, 1);
+				// dispatch(getChangeCurrentIndex(currentIndex + 1));
 				dispatch(getChangePlayListAction(playList));
 		}
 	}
@@ -180,65 +181,6 @@ function random (index, length){
 	return res;
 }
 
-// 随机播放音乐
-export const playRdMusic = (value, loadCacheMusic = false) => {
-	return (dispatch, getState) => {
-		const state = getState();
-		const list  = state.reducer.playList;
-//				从歌曲列表中寻找当前歌曲的index
-		const index = findIndex(list, value);
-		if ( index === state.reducer.currentIndex && !loadCacheMusic){
-			return;
-		}
-		if(index >= 0){
-			dispatch(getChangeCurrentIndex(index));
-		}else{
-//					如果没有这首歌
-//push 这首歌到playList中
-//改变index
-			list.push(value);
-			dispatch(getChangePlayListAction(list));
-			dispatch(getChangeCurrentIndex(list.length - 1));
-		}
-//				改变当前播放音乐信息
-		// dispatch(changeCurrentMusicAction(value));
-		// console.log('123')
-//				获取歌曲url
-		getMusicUrl(value.id).then(({data: { data }}) => {
-			if(!data[0].url){
-				message.info('歌曲暂无版权，自动播放下一首歌曲');
-				if(index !== list.length - 1){
-					dispatch(playNextMusicAction());
-				}
-				return;
-			}
-			value.musicUrl = data[0].url;
-			dispatch(changeCurrentMusicAction(value));
-			if(loadCacheMusic){
-				let STOP = false;
-				dispatch(getChangePlayingStatusAction(STOP));
-			}
-		}).then(() => {
-			//				获取当前播放音乐歌词
-					dispatch(getCurrentMusicLyric());
-		})
-	}
-}
-
-// 单曲循环音乐
-export const loopCurMusic = () => {
-	return (dispatch, getState) => {
-		const state = getState();
-		const { playList } = state.reducer;
-		let { currentIndex } = state.reducer;
-		const len = playList.length;
-		if(len === 0 || len === 1){
-			return;
-		}
-		dispatch(getChangeCurrentMusic(playList[currentIndex]));
-		dispatch(getChangeCurrentIndex(currentIndex));
-	}
-}
 //		点击歌曲播放逻辑控制
 export const getChangeCurrentMusic = (value, loadCacheMusic = false) => {
 	return (dispatch, getState) => {

@@ -39,6 +39,25 @@
         left: 0;
         border-radius: .27rem;
         background: $progressBc;
+        .progress_end{
+          position: relative;
+          float: right;
+          width: .27rem;
+          height: .27rem;
+          margin-top: -.07rem;
+          background: #fff;
+          border-radius: 50%;
+          .innerCircle{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: .11rem;
+            height: .11rem;
+            background: $headerBc;
+            border-radius: 50%;
+          }
+        }
       }
     }
     .m_totalTime{

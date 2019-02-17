@@ -20,6 +20,8 @@ class PlayDetails extends Component{
       artists: '',
       musicUrl: '',
       currentMusicLyric: '',
+      playList: '',
+      currentIndex: '',
     }
     // 滚动条拖动后修改歌词
     this.changeMusicLyric = this.changeMusicLyric.bind(this);
@@ -37,16 +39,23 @@ class PlayDetails extends Component{
     // 当上一个props 的歌词和 这个 props 的歌词一样时，直接返回
      const r =
        JSON.stringify(nextProps.currentMusic) ===
-       JSON.stringify(this.props.currentMusic);
+       JSON.stringify(this.props.currentMusic) && JSON.stringify(nextProps.playList) ===
+       JSON.stringify(this.props.playList);
      if (r) {
        return;
      }
-    this.setState(() => ({
+    this.setState({
       name: nextProps.currentMusic.name,
       artists: nextProps.currentMusic.artists,
       musicUrl: nextProps.currentMusic.musicUrl,
       currentMusicLyric: nextProps.currentMusic.currentMusicLyric,
-    }));
+      playList: nextProps.playList,
+      currentIndex: nextProps.currentIndex,
+    },() => {
+      this.setState({
+        bcCovImg: this.state.playList[this.state.currentIndex].album.picUrl,
+      });
+    });
   }
   // 滚动条拖动后修改歌词
   changeMusicLyric (currentTime) {
@@ -73,6 +82,7 @@ class PlayDetails extends Component{
   render(){
     return(
       <div className="playDetails">
+        <img className="bcCovImg" src={ this.state.bcCovImg } alt="" ></img>
         {/*导航*/}
         <div className="header">
           <Link to="/mrtj">
@@ -104,8 +114,11 @@ class PlayDetails extends Component{
 }
 
 const mapStateToProps = (state) => {
+  console.log(state)
   return{
     currentMusic: state.reducer.currentMusic,
+    playList: state.reducer.playList,
+    currentIndex: state.reducer.currentIndex,
     currentMusicLyric: state.reducer.currentMusicLyric,
   }
 }

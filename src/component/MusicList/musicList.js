@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getChangeCurrentMusic, wipeOffCurMusic, changePlayMode, loopCurMusic, playRdMusic, getChangePlayModeAction } from '../../store/actionCreator';
+import { message } from 'antd';
+import { getChangeCurrentMusic, wipeOffCurMusic, changePlayMode, getChangePlayModeAction, } from '../../store/actionCreator';
 import { PLAY_MODE_TYPES } from '../../common/js/config';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import './musicList.scss';
@@ -29,7 +30,11 @@ class MusicList extends Component {
       this.props.onRef1(this);
   }
   componentWillReceiveProps(nextProps){
+    console.log(
+      '1'
+    )
     if(!nextProps.playList){
+      console.log('2')
       return;
     }
     // 当上一个props 的歌曲和 这个 props 的歌曲一样时，直接返回
@@ -40,6 +45,7 @@ class MusicList extends Component {
      if (r) {
        // return;
      }
+     console.log('playList', nextProps.playList)
      this.setState(() => ({
        playList: nextProps.playList,
        currentIndex: nextProps.currentIndex,
@@ -50,16 +56,21 @@ class MusicList extends Component {
   changePlayMode(value) {
     switch (value) {
       case 0:
+        message.info('列表循环');
         this.props.changePlayMode(value);
         break;
       case 1:
+        message.info('随机播放');
         this.props.changePlayMode(value);
         break;
       case 2:
+        message.info('单曲循环');
         this.props.changePlayMode(value);
         break;
       default:
+        message.info('随机播放');
         this.props.changePlayMode(1);
+        break;
     }
   }
   // 打开音乐播放列表事件
@@ -183,12 +194,6 @@ const mapDispatchToProps = (dispatch) => {
     },
     wipeOffCur(value){
       dispatch(wipeOffCurMusic(value));
-    },
-    loopCurMusic () {
-      dispatch(loopCurMusic());
-    },
-    playRdMusic () {
-      dispatch(playRdMusic());
     },
     changePlayMode (value) {
       dispatch(getChangePlayModeAction(value));

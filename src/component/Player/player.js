@@ -5,8 +5,8 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getChangePlayingStatusAction, playPrevMusicAction, playNextMusicAction, getChangePlayModeAction,getLoginType,
-loopCurMusic, playRdMusic } from '../../store/actionCreator';
+import { message } from 'antd';
+import { getChangePlayingStatusAction, playPrevMusicAction, playNextMusicAction, getChangePlayModeAction,getLoginType,} from '../../store/actionCreator';
 import { PLAY_MODE_TYPES } from '../../common/js/config';
 import { formatTime } from '../../common/js/util';
 import './player.scss';
@@ -112,16 +112,21 @@ class Player extends Component {
   changePlayMode(value) {
     switch (value) {
       case 0:
+        message.info('列表循环');
         this.props.changePlayMode(value);
         break;
       case 1:
+        message.info('随机播放');
         this.props.changePlayMode(value);
         break;
       case 2:
+        message.info('单曲循环');
         this.props.changePlayMode(value);
         break;
       default:
+        message.info('随机播放');
         this.props.changePlayMode(1);
+        break;
     }
   }
   // 切换音乐播放状态
@@ -164,14 +169,11 @@ class Player extends Component {
     });
     if(audio.ended){
       switch (this.state.playMode) {
-        case 0:
+        case 0,1:
           this.props.playNextMusic();
           break;
-        case 1:
-          this.props.playRdMusic();
-          break;
         case 2:
-          this.props.loopCurMusic();
+          audio.play();
           break;
         default:
           this.props.playNextMusic();
@@ -197,7 +199,11 @@ class Player extends Component {
           <div className="m_currentTime">{this.state.currentTime}</div>
           <div className="progress" ref="progress">
             <div className="progress_buffered" ref='buffered'></div>
-            <div className="progress_played" ref='played'></div>
+            <div className="progress_played" ref='played'>
+              <div className="progress_end">
+                <div className="innerCircle"></div>
+              </div>
+            </div>
           </div>
           <div className="m_totalTime">{this.state.totalTime}</div>
         </div>
@@ -266,12 +272,6 @@ const mapDispatchToProps = (dispatch) => {
     },
     playNextMusic () {
       dispatch(playNextMusicAction());
-    },
-    loopCurMusic () {
-      dispatch(loopCurMusic());
-    },
-    playRdMusic () {
-      dispatch(playRdMusic());
     }
   }
 }
