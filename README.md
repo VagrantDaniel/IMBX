@@ -4,11 +4,11 @@
 
 ## 项目操作示范
 
-![项目操作示范](https://user-gold-cdn.xitu.io/2019/2/17/168fa44893f0c3c9?w=750&h=1320&f=gif&s=1525012)
+![项目操作示范](https://user-gold-cdn.xitu.io/2019/2/17/168fa44893f0c3c9?w=375&h=68&f=gif&s=1525012)
 
 ## 项目结构
 
-![项目结构](https://user-gold-cdn.xitu.io/2019/2/17/168fa491cc3da274?w=518&h=1537&f=jpeg&s=83776)
+![项目结构](https://user-gold-cdn.xitu.io/2019/2/17/168fa491cc3da274?w=259&h=767&f=jpeg&s=83776)
 > build—存放webpack编译后打包好的文件<br/>
 > NeteaseCloudMusicApi-master-网易云音乐API<br/>
 > public-存放项目图标(favicon.ico)、index.html、manifest.json、项目截图.png<br/>
