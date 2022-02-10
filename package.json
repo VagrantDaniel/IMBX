@@ -9,7 +9,7 @@
     "babel-plugin-import": "^1.11.0",
     "lib-flexible": "^0.3.2",
     "lyric-parser": "^1.0.1",
-    "node-sass": "^4.11.0",
+    "node-sass": "^7.0.0",
     "react": "^16.7.0",
     "react-addons-css-transition-group": "^15.6.2",
     "react-app-rewired": "^2.0.2-next.0",
